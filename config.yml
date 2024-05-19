@@ -1,0 +1,120 @@
+#=================Global Settings===================#
+
+#Define if you want to show prefix or no
+use-prefix: true
+#Define the prefix used for commands
+prefix: "&8[&bAssaut&8] "
+
+#=================Permissions=======================#
+
+#Defined the message sent if a player executes a command without having permission
+no-permission: "&cVous n'avez pas la permission d'exécuter cette commande."
+#Define if you allow leave assault or no
+allow_assault_leave: true
+#Define if you allow join assault or no
+allow_assault_join: true
+#Define if you want to show scoreboard for assaults or no
+enable_assault_scoreboard: true
+
+#=================Help Message=======================#
+
+#Header of help message
+help_header: "&b=== Aide Assault ==="
+help_1: "&7/assault help : Affiche cette aide."
+help_2: "&7/assault list : Liste les assauts en cours."
+help_3: "&7/assault <faction> : Lance un assaut sur une faction."
+help_4: "&7/assault admin : Commandes d'administration."
+help_5: "&7/assault ranking : ranking des factions ayant gagné le plus d'assaut."
+#Footer of help message
+help_footer: "&b==================="
+
+#=================Ranking Settings=======================#
+
+#ranking header
+ranking_header: "&b=== Classement top 10 ==="
+#ranking lines (showing entries x)
+#Placeholders for this settings : %c >> ranking of this line | %f >> Tag of the faction | %p >> Elo points of the faction | %w >> Number of wins (all time) | %l >> Number of looses (all time)
+ranking_lines: "n°%c : %f (%p points d'elo pour %w victoires et %l defaites)"
+#ranking footer
+ranking_footer: "&b=================="
+#Number of entries showed in tchat
+ranking_entries: 10
+
+#=================Sounds Settings=======================#
+
+#Define if you want to allow play sound in differents events (like starting assault)
+#Tips : You can use modded sounds here
+play_sound: true
+#Define sound played when a player start assault
+played_sound: ENTITY_PLAYER_LEVELUP
+
+#=================Assaults Settings=======================#
+
+#Define cooldown behind start two assault
+cooldown_behind_assaults: 120
+#Define minimum member in defense faction required for start assault
+minimum_defense_faction_connected_count: 5
+#Define minimum member in attack faction required for start assault
+minimum_attack_faction_connected_count: 3
+#Define duration of assaults (in minutes)
+duration_of_assault: 20
+#Define minimum role required of member who can start assault in attack factions
+#Tips : Allowed roles : LEADER, COLEADER, MODERATOR, NORMAL, RECRUIT
+minimum_role_allowed_for_assault: "COLEADER"
+#Define elo points given on win assault
+elo_points_to_give: 20
+#Define assault points given on player kill
+point-per-kill: 5
+
+#=================Messages Settings=======================#
+
+messages:
+  #Define message sent on faction when staff reset assault cooldown.
+  #Placeholders : %s >> Name of the staff
+  reset_cooldown_by_faction: "&aLe temps de recharge pour l'assaut de votre faction a été réinitialisé par %s."
+  #Define message sent on faction when staff reset assault cooldown.
+  #Placeholders : %s >> Name of the staff | %f >> Faction of assault cooldown reset
+  reset_cooldown_for_faction: "&aLe temps de recharge pour l'assaut de la faction %f a été réinitialisé par %s."
+  #Define message sent if you not allowed to leave faction in assault
+  you_cant_leave_faction_in_assault: "&cVous ne pouvez pas quitter la faction pendant un assaut."
+  #Define message sent if you not allowed to join faction in assault
+  you_cant_join_faction_in_assault: "&cVous ne pouvez pas rejoindre une faction pendant un assaut."
+  #Define broadcast sent in global tchat when assault is started.
+  #Placeholders : %f >> Name of attacking faction | %df >> Name of defensing faction | %h >> Hour of starting assault
+  start_assault: "&aL'assaut entre %f et %df a commencé ! Heure de début : %h"
+  #Define message sent when they are not enought players in attacked faction
+  not_enought_online_players: "&cIl n'y a pas assez de joueurs connectés dans la faction ciblée."
+  #Define message sent when tey are not enought player in attacking faction
+  not_enought_online_players_in_your_faction: "&cIl n'y a pas assez de joueurs connectés dans votre faction."
+  #Define message sent when player try to assault staff or wilderness faction
+  cannot_assault_staff_or_wild_faction: "&cVous ne pouvez pas assaillir une faction du personnel ou une zone sauvage."
+  #Define message sent when player try to assault while being in wilderness
+  cannot_assault_in_wilderness: "&cVous ne pouvez pas assaillir une faction alors que vous êtes dans la zone sauvage."
+  #Define message sent when player trying to assault havent good roles for it
+  you_havnt_good_role: "&cVous n'avez pas le bon rôle pour lancer un assaut."
+  #Define message sent when player trying to assault other faction who are already in assault.
+  you_cant_assault_if_it_are_in_assault: "&cVous ne pouvez pas assaillir cette faction car elle est déjà sous assaut."
+  #Define message sent when player trying to assault other faction while his faction is already in assault.
+  you_cant_assault_if_you_are_in_assault: "&cVous ne pouvez pas assaillir une autre faction tant que vous êtes sous assaut."
+  #Define message sent when player trying to assault other faction while the 2 factions are not enemies
+  you_cant_in_enemy_with_this_faction: "&cVous ne pouvez pas assaillir cette faction car elle n'est pas en relation d'ennemi."
+  #Define message sent when player trying to view assault list, but they are not assault in server.
+  assault_list_any_assault: "&7Aucun assaut n'est en cours pour le moment."
+  #Define message sent in the end of assault
+  #Placeholders : %w >> Faction who win the assault | %pw >> Points of winning faction | %e >> Elo points winning of loosing in assault | %l >> Faction who loose the assault | %pl >> Points of loosing faction
+  assault_win: "&c%w (%pw) &2(⬈+%e) &cà gagné contre &4%l (%pl) (⬋-%e)"
+  #Define message sent when, in the end of assault, the two factions are equality scored.
+  #Placeholders : %a >> Attacking faction | %d >> Defensing faction | %p >> Number of points
+  assault_equality: "&cL'assaut entre %a et %d c'est fini sur un match nul (%p-%p)."
+  #Define message sent when player trying to assault other faction, but they are cooldown
+  #Placeholder : %m >> Minute roaming
+  they_are_cooldown_with_this_faction: "&cVous ne pouvez pas assaut cette faction avant %m minutes."
+
+#==================Server Settings========================#
+#=================DO NOT TOUCH IT !=======================#
+
+assault: {}
+
+cooldowns: {}
+
+ranking: {}
