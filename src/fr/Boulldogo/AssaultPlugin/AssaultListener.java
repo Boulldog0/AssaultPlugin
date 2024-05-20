@@ -38,11 +38,11 @@ public class AssaultListener implements Listener {
         Faction playerFac = FPlayers.getInstance().getByPlayer(player).getFaction();
         if (!playerFac.isWilderness()) {
             int index = 0;
-            if (AssaultCommand.attackAssaultList.contains(playerFac)) {
+            if (!AssaultCommand.attackAssaultList.isEmpty() && AssaultCommand.attackAssaultList.contains(playerFac)) {
                 index = AssaultCommand.attackAssaultList.indexOf(playerFac);
                 int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
                 defenseScoreList.set(index, defenseScoreList.get(index) + scoreToAdd);
-            } else if (AssaultCommand.defenseAssaultList.contains(playerFac)) {
+            } else if (!AssaultCommand.defenseAssaultList.isEmpty() && AssaultCommand.defenseAssaultList.contains(playerFac)) {
                 index = AssaultCommand.defenseAssaultList.indexOf(playerFac);
                 int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
                 attackScoreList.set(index, attackScoreList.get(index) + scoreToAdd);
@@ -56,10 +56,10 @@ public class AssaultListener implements Listener {
 		Player player = e.getPlayer();
 		Faction playerFac = FPlayers.getInstance().getByPlayer(player).getFaction();
 		if(!playerFac.isWilderness()) {
-			if(AssaultCommand.attackAssaultList.contains(playerFac)) {
+			if(!AssaultCommand.attackAssaultList.isEmpty() && AssaultCommand.attackAssaultList.contains(playerFac)) {
 				int index = AssaultCommand.attackAssaultList.lastIndexOf(playerFac);
 				createScoreboard(player, index);
-			} else if(AssaultCommand.defenseAssaultList.contains(playerFac)) {
+			} else if(!AssaultCommand.defenseAssaultList.isEmpty() && AssaultCommand.defenseAssaultList.contains(playerFac)) {
 				int index = AssaultCommand.defenseAssaultList.lastIndexOf(playerFac);
 				createScoreboard(player, index);
 			}
@@ -72,12 +72,12 @@ public class AssaultListener implements Listener {
 		Faction playerFac = FPlayers.getInstance().getByPlayer(player).getFaction();
 		if(plugin.getConfig().getBoolean("allow_assault_leave")) {
 			if(!playerFac.isWilderness()) {
-				if(AssaultCommand.attackAssaultList.contains(e.getFaction())) {
+				if(!AssaultCommand.attackAssaultList.isEmpty() && AssaultCommand.attackAssaultList.contains(e.getFaction())) {
 		            Scoreboard board = player.getScoreboard();
 		            if (board != null) {
 		                board.clearSlot(DisplaySlot.SIDEBAR);
 		            }
-				} else if(AssaultCommand.defenseAssaultList.contains(e.getFaction())) {
+				} else if(!AssaultCommand.defenseAssaultList.isEmpty() && AssaultCommand.defenseAssaultList.contains(e.getFaction())) {
 		            Scoreboard board = player.getScoreboard();
 		            if (board != null) {
 		                board.clearSlot(DisplaySlot.SIDEBAR);
@@ -97,10 +97,10 @@ public class AssaultListener implements Listener {
 		Faction playerFac = FPlayers.getInstance().getByPlayer(player).getFaction();
 		if(plugin.getConfig().getBoolean("allow_assault_join")) {
 			if(!playerFac.isWilderness()) {
-				if(AssaultCommand.attackAssaultList.contains(e.getFaction())) {
+				if(!AssaultCommand.attackAssaultList.isEmpty() && AssaultCommand.attackAssaultList.contains(e.getFaction())) {
 					int index = AssaultCommand.attackAssaultList.lastIndexOf(playerFac);
 					createScoreboard(player, index);
-				} else if(AssaultCommand.defenseAssaultList.contains(e.getFaction())) {
+				} else if(!AssaultCommand.defenseAssaultList.isEmpty() && AssaultCommand.defenseAssaultList.contains(e.getFaction())) {
 					int index = AssaultCommand.attackAssaultList.lastIndexOf(playerFac);
 					createScoreboard(player, index);
 				}

@@ -1,10 +1,15 @@
 package fr.Boulldogo.AssaultPlugin;
 
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
+
+import net.md_5.bungee.api.ChatColor;
 
 public class Main extends JavaPlugin {
 	
@@ -18,15 +23,14 @@ public class Main extends JavaPlugin {
 			this.getConfig().set("assault", null);
 		}
 		
-        GithubVersion updateChecker = new GithubVersion(this, "Boulldogo", "AssaultPlugin");
-        updateChecker.checkForUpdates();
+        GithubVersion versionChecker = new GithubVersion(this, "1.0.0", "https://api.github.com/repos/Boulldog0/AssaultPlugin/releases/latest");
+        versionChecker.checkVersion();
 		
 		this.plugin = this;
 		startCooldownVerification();
 		
 		this.getCommand("assault").setExecutor(new AssaultCommand(this));
 		this.getServer().getPluginManager().registerEvents(new AssaultListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new GithubVersion(this, "Boulldogo", "AssaultPlugin"), this);
 		this.getLogger().info("Plugin assault version 1.0.0 by Boulldogo loaded with success !");
 	}
 	
@@ -67,6 +71,16 @@ public class Main extends JavaPlugin {
 	        }
 	    };
 	    verification.runTaskTimer(plugin, 0, 1200);
+	}
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent e) {
+		Player player = e.getPlayer();
+		
+		if(player.hasPermission("assault.update") && GithubVersion.newVersion) {
+			player.sendMessage(ChatColor.RED + "A new version of Assault Plugin is avaiable !");
+			player.sendMessage(ChatColor.RED + "Download it at : https://www.spigotmc.org/resources/assaultplugin.116864/");
+		}
 	}
 
 
