@@ -1,0 +1,163 @@
+package fr.Boulldogo.AssaultPlugin;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+
+import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.Faction;
+
+public class InteractListener implements Listener {
+
+    private final Main plugin;
+
+    public InteractListener(Main plugin) {
+        this.plugin = plugin;
+    }
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
+        Player player = e.getPlayer();
+        ItemStack stack = e.getItem();
+        Block block = e.getClickedBlock();
+
+        if (stack != null) {
+            Material material = stack.getType();
+            @SuppressWarnings("deprecation")
+			int id = material.getId();
+            if (!player.hasPermission("assault.bypass-restricted.items_interact")) {
+                if (plugin.getConfig().getIntegerList("interaction-item-restricted-in-assault").contains(id)) {
+                    Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
+                    if (!faction.isWilderness()) {
+                        if (isInAssault(faction)) {
+                            e.setCancelled(true);
+                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.restricted-item-in-assault")));
+                        }
+                    }
+                }
+
+                if (plugin.getConfig().getIntegerList("interaction-item-restricted-excluding-assault").contains(id)) {
+                    Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
+                    if (!faction.isWilderness()) {
+                        if (!isInAssault(faction)) {
+                            e.setCancelled(true);
+                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.restricted-item-excluding-assault")));
+                        }
+                    }
+                }
+            }
+        }
+
+        if (block != null) {
+            Material material = block.getType();
+            @SuppressWarnings("deprecation")
+			int id = material.getId();
+            if (!player.hasPermission("assault.bypass-restricted.block_interact")) {
+                if (plugin.getConfig().getIntegerList("interaction-block-restricted-in-assault").contains(id)) {
+                    Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
+                    if (!faction.isWilderness()) {
+                        if (isInAssault(faction)) {
+                            e.setCancelled(true);
+                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.restricted-block-in-assault")));
+                        }
+                    }
+                }
+
+                if (plugin.getConfig().getIntegerList("interaction-block-restricted-excluding-assault").contains(id)) {
+                    Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
+                    if (!faction.isWilderness()) {
+                        if (!isInAssault(faction)) {
+                            e.setCancelled(true);
+                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.restricted-block-excluding-assault")));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent e) {
+        String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
+        Block block = e.getBlock();
+        Player player = e.getPlayer();
+        if (block != null) {
+            Material material = block.getType();
+            @SuppressWarnings("deprecation")
+			int id = material.getId();
+            if (!player.hasPermission("assault.bypass-restricted.block-place")) {
+                if (plugin.getConfig().getIntegerList("block-place-restricted-in-assault").contains(id)) {
+                    Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
+                    if (!faction.isWilderness()) {
+                        if (isInAssault(faction)) {
+                            e.setCancelled(true);
+                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.block-place-in-assault")));
+                        }
+                    }
+                }
+
+                if (plugin.getConfig().getIntegerList("block-place-restricted-excluding-assault").contains(id)) {
+                    Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
+                    if (!faction.isWilderness()) {
+                        if (!isInAssault(faction)) {
+                            e.setCancelled(true);
+                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.block-place-excluding-assault")));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent e) {
+        String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
+        Block block = e.getBlock();
+        Player player = e.getPlayer();
+        if (block != null) {
+            Material material = block.getType();
+            @SuppressWarnings("deprecation")
+			int id = material.getId();
+            if (!player.hasPermission("assault.bypass-restricted.block-break")) { // Correction ici
+                if (plugin.getConfig().getIntegerList("block-break-restricted-in-assault").contains(id)) {
+                    Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
+                    if (!faction.isWilderness()) {
+                        if (isInAssault(faction)) {
+                            e.setCancelled(true);
+                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.block-break-in-assault")));
+                        }
+                    }
+                }
+
+                if (plugin.getConfig().getIntegerList("block-break-restricted-excluding-assault").contains(id)) {
+                    Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
+                    if (!faction.isWilderness()) {
+                        if (!isInAssault(faction)) {
+                            e.setCancelled(true);
+                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.block-break-excluding-assault")));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean isInAssault(Faction faction) {
+        return AssaultCommand.attackAssaultList.contains(faction)
+                || AssaultCommand.defenseAssaultList.contains(faction)
+                || AssaultCommand.attackJoinList.contains(faction)
+                || AssaultCommand.defenseJoinList.contains(faction);
+    }
+
+    public String translateString(String s) {
+        return ChatColor.translateAlternateColorCodes('&', s);
+    }
+}

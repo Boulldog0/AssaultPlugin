@@ -9,8 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class GithubVersion {
-	
-	public static boolean newVersion = false;
 
     private final JavaPlugin plugin;
     private final String currentVersion;
@@ -32,9 +30,10 @@ public class GithubVersion {
             String latestVersion = (String) json.get("tag_name");
 
             if (!latestVersion.equals(currentVersion)) {
-            	newVersion = true;
                 plugin.getLogger().warning("New version of Assault Plugin is avaiable : " + latestVersion);
                 plugin.getLogger().warning("Download it at : https://www.spigotmc.org/resources/assaultplugin.116864/");
+                plugin.getConfig().set("latest-version", latestVersion);
+                plugin.saveConfig();
             } else {
                 plugin.getLogger().info("Plugin Assault is up to date (version " + currentVersion + ")");
             }

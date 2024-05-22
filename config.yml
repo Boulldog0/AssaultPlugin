@@ -13,8 +13,6 @@ no-permission: "&cVous n'avez pas la permission d'exécuter cette commande."
 allow_assault_leave: true
 #Define if you allow join assault or no
 allow_assault_join: true
-#Define if you want to show scoreboard for assaults or no
-enable_assault_scoreboard: true
 
 #=================Help Message=======================#
 
@@ -22,9 +20,11 @@ enable_assault_scoreboard: true
 help_header: "&b=== Aide Assault ==="
 help_1: "&7/assault help : Affiche cette aide."
 help_2: "&7/assault list : Liste les assauts en cours."
-help_3: "&7/assault <faction> : Lance un assaut sur une faction."
+help_3: "&7/assault <faction>(or player) : Lance un assaut sur une faction."
 help_4: "&7/assault admin : Commandes d'administration."
-help_5: "&7/assault ranking : ranking des factions ayant gagné le plus d'assaut."
+help_5: "&7/assault ranking : Ranking des factions ayant gagné le plus d'assaut."
+help_6: "&7/assault join <faction>: Permet de rejoindre un assaut d'un coté ou de l'autre de celui ci."
+help_7: "&7/assault accept <faction> : Permet d'accepter une demande d'aide faite par une faction à une autre."
 #Footer of help message
 help_footer: "&b==================="
 
@@ -32,7 +32,7 @@ help_footer: "&b==================="
 
 #ranking header
 ranking_header: "&b=== Classement top 10 ==="
-#ranking lines (showing entries x)
+#ranking lines (showing entries to 1 from x)
 #Placeholders for this settings : %c >> ranking of this line | %f >> Tag of the faction | %p >> Elo points of the faction | %w >> Number of wins (all time) | %l >> Number of looses (all time)
 ranking_lines: "n°%c : %f (%p points d'elo pour %w victoires et %l defaites)"
 #ranking footer
@@ -61,10 +61,65 @@ duration_of_assault: 20
 #Define minimum role required of member who can start assault in attack factions
 #Tips : Allowed roles : LEADER, COLEADER, MODERATOR, NORMAL, RECRUIT
 minimum_role_allowed_for_assault: "COLEADER"
-#Define elo points given on win assault
+#Define minimum role required of member who can join assault
+#Tips : Allowed roles : LEADER, COLEADER, MODERATOR, NORMAL, RECRUIT
+minimum_role_allowed_for_join_assault: "COLEADER"
+#Define elo points given or removed on win/loose assault
 elo_points_to_give: 20
+#Define elo points given or removed on win/loose assault to joining assaults faction
+#Set to 0 for disable elo points system in join assault
+elo_points_to_give_on_join: 5
 #Define assault points given on player kill
 point-per-kill: 5
+
+#=================Scoreboard Settings=======================#
+
+#Define if you want to show scoreboard for assaults or no
+enable_assault_scoreboard: true
+
+#=================Restrictions Settings=======================#
+#Here, all items (modded or no) works correctly.
+#=============================================================#
+
+#Add new line with numeric ID for restrict items in assault
+interaction-item-restricted-in-assault:
+  - 9000
+  - 9001
+
+#Add new line with numeric ID for restrict items excluding assault
+interaction-item-restricted-excluding-assault:
+  - 9000
+  - 9001
+
+#Add new line with numeric ID for rectrict block interact in assault
+interaction-block-restricted-in-assault:
+  - 9000
+  - 9001
+
+#Add new line with numeric ID for rectrict block interact excluding assault
+interaction-block-restricted-excluding-assault:
+  - 9000
+  - 9001
+
+#Add new line with numeric ID for rectrict block place in assault
+block-place-restricted-in-assault:
+  - 9000
+  - 9001
+
+#Add new line with numeric ID for rectrict block place excluding assault
+block-place-restricted-excluding-assault:
+  - 9000
+  - 9001
+
+#Add new line with numeric ID for rectrict block break in assault
+block-break-restricted-in-assault:
+  - 9000
+  - 9001
+
+#Add new line with numeric ID for rectrict block break excluding assault
+block-break-restricted-excluding-assault:
+  - 9000
+  - 9001
 
 #=================Messages Settings=======================#
 
@@ -86,12 +141,38 @@ messages:
   not_enought_online_players: "&cIl n'y a pas assez de joueurs connectés dans la faction ciblée."
   #Define message sent when tey are not enought player in attacking faction
   not_enought_online_players_in_your_faction: "&cIl n'y a pas assez de joueurs connectés dans votre faction."
+  #Define message sent when player trying to join assault, but target faction dosnt exists
+  this_faction_dosnt_exists: "&cCette faction n'existe pas !"
   #Define message sent when player try to assault staff or wilderness faction
   cannot_assault_staff_or_wild_faction: "&cVous ne pouvez pas assaillir une faction du personnel ou une zone sauvage."
   #Define message sent when player try to assault while being in wilderness
   cannot_assault_in_wilderness: "&cVous ne pouvez pas assaillir une faction alors que vous êtes dans la zone sauvage."
   #Define message sent when player trying to assault havent good roles for it
   you_havnt_good_role: "&cVous n'avez pas le bon rôle pour lancer un assaut."
+  #Define message sent when player trying to join assault, but target faction is not in assault
+  this_facion_is_not_in_assault: "&cVous ne pouvez pas rejoindre un assaut de cette faction car celle ci n'est pas en assaut."
+  #Define message sent when player trying to join assault, but target faction is not in allies with player faction.
+  you_must_be_ally_with_this_faction: "&cVous devez être allié avec cette faction pour rejoindre son assaut."
+  #Define message sent when player request to join assault with other faction in assault.
+  #Placeholders : %pf >> Tag of player faction | %f >> Tag of target faction
+  faction_request_join_assault: "&2La faction %pf demande à aider la faction %f"
+  #Define message sent when player request to join assault with other faction in assault.
+  #Placeholders : %pf >> Tag of player faction | %f >> Tag of target faction
+  faction_join_assault: "&2La faction %pf rejoins l'assaut au coté de la faction %f"
+  #Define message sent when player trying to accept join assault request, but target faction are not request that.
+  this_facion_are_not_request_join_assault: "&cCette faction n'a pas fait de requête pour rejoindre l'assaut a vos cotés !"
+  #Define message sent in end of assault, if player is in faction who joined the winner faction.
+  #Placeholder : %e >> Elo winned on join assault.
+  you_win_elo_on_join_assault: "&2Vous avez gagné %e points d'elo en rejoingnant l'assaut du coté des vainqueurs !"
+  #Define messagent sent when player trying to join assault, but his faction already sent a request.
+  already_sent_request: "&cVotre faction à déjà envoyé une requête pour demander a rejoindre cet assaut."
+  #Define message sent in end of assault, if player is in faction who joined the looser faction.
+  #Placeholder : %e >> Elo loosed on join assault.
+  you_loose_elo_on_join_assault: "&cVous avez perdu %e points d'elo en rejoingnant l'assaut du coté des perdants !"
+  #Define message sent when player trying to accept join assault, but his faction is not in assault
+  you_cant_accept_join_assaut_cause_you_are_not_in_assault: "&cVous ne pouvez pas accepter un join assaut car vous n'êtes pas en assaut !"
+  #Define message sent when player trying to join assault, but his faction is already in assault
+  you_cant_join_assaut_if_you_are_in_assault: "&cVous ne pouvez pas rejoindre l'assaut d'une faction en étant en assaut !"
   #Define message sent when player trying to assault other faction who are already in assault.
   you_cant_assault_if_it_are_in_assault: "&cVous ne pouvez pas assaillir cette faction car elle est déjà sous assaut."
   #Define message sent when player trying to assault other faction while his faction is already in assault.
@@ -109,7 +190,26 @@ messages:
   #Define message sent when player trying to assault other faction, but they are cooldown
   #Placeholder : %m >> Minute roaming
   they_are_cooldown_with_this_faction: "&cVous ne pouvez pas assaut cette faction avant %m minutes."
-
+  #Define message sent when player using item in assault, but this item is restricted in assault.
+  restricted-item-in-assault: "&cVous ne pouvez pas intéragir avec cette item en assaut !"
+  #Define message sent when player using item excluding assault, but this item is restricted excluding assault.
+  restricted-item-excluding-assault: "&cVous ne pouvez pas intéragir avec cette item hors assaut !"
+  #Define message sent when player using block interaction in assault, but this block interaction is restricted in assault.
+  restricted-block-in-assault: "&cVous ne pouvez pas intéragir avec ce bloc en assaut !"
+  #Define message sent when player using block interaction excluding assault, but this block interaction is restricted excluding assault.
+  restricted-block-excluding-assault: "&cVous ne pouvez pas intéragir avec ce bloc hors assaut !"
+  #Define message sent when player place block who restricted in assault.
+  block-place-in-assault: "&cVous ne pouvez pas poser ce bloc en assaut !"
+  #Define message sent when player place block who restricted excluding assault.
+  block-place-excluding-assault: "&cVous ne pouvez pas poser ce bloc hors assaut !"
+  #Define message sent when player break block who restricted in assault."
+  block-break-in-assault: "&cVous ne pouvez pas casser ce bloc en assaut !"
+  #Define message sent when player break block who restricted excluding assault."
+  block-break-excluding-assault: "&cVous ne pouvez pas casser ce bloc hors assaut !"
+  #Define message sent when player trying to sent command who restricted in assault.
+  commands-restricted-in-assault: "&cVous ne pouvez executer cette commande en assaut !"
+  #Define message sent when player trying to sent command who restricted excluding assault.
+  commands-restricted-excluding-assault: "&cVous ne pouvez pas executer cette commande hors assaut !"
 #==================Server Settings========================#
 #=================DO NOT TOUCH IT !=======================#
 
@@ -118,3 +218,5 @@ assault: {}
 cooldowns: {}
 
 ranking: {}
+
+latest-version: 1.0.0
