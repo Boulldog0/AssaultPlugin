@@ -63,7 +63,7 @@ public class AssaultListener implements Listener {
 					}
 				}
                 int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
-                defenseScoreList.set(index, defenseScoreList.get(index) + scoreToAdd);
+                defenseScoreList.set(index, attackScoreList.get(index) + scoreToAdd);
 			}
             updateScoreboard(index);
         }

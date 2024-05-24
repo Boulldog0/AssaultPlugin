@@ -94,7 +94,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
             }
 
             if (args.length < 2) {
-                player.sendMessage(prefix + ChatColor.RED + "Admin arguments: /assault admin <stop/resetcd> <args>");
+                player.sendMessage(prefix + ChatColor.RED + "Admin arguments: /assault admin <stop/resetcd/modifyelo> <args>");
                 return true;
             }
 
@@ -152,6 +152,67 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
                 aFaction.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.reset_cooldown_by_faction").replace("%f", facName).replace("%s", player.getName()))));
                 faction.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.reset_cooldown_for_faction").replace("%f", aFacName).replace("%s", player.getName()))));
                 player.sendMessage(prefix + "Cooldown of faction " + facName + " for assault faction " + aFacName + " successfully reset!");
+            } else if(command.equals("modifyelo")) {
+                if (args.length < 5) {
+                    player.sendMessage(prefix + ChatColor.RED + "Correct arguments: /assault admin modifyelo <faction> <add/remove> <win/loose/points> <value>");
+                    return true;
+                }
+
+                String facName = args[2];
+                Faction faction = Factions.getInstance().getByTag(facName);
+                if (faction == null || faction.isWilderness()) {
+                    player.sendMessage(prefix + ChatColor.RED + "You cannot reset assault cooldown for a wilderness faction!");
+                    return true;
+                }
+                
+                if(!plugin.getConfig().contains("ranking." + faction.getTag())) {
+                    player.sendMessage(prefix + ChatColor.RED + "This faction does not have ranking data ! Server create that, retry to execute command !");
+                    plugin.getConfig().set("ranking." + faction.getTag() + ".points", 0);
+                    plugin.getConfig().set("ranking." + faction.getTag() + ".win", 0);
+                    plugin.getConfig().set("ranking." + faction.getTag() + ".loose", 0);
+                    plugin.saveConfig();
+                    return true;
+                }
+                
+                String sc = args[3];
+                
+                if(!sc.equals("add") && !sc.equals("remove")) {
+                    player.sendMessage(prefix + ChatColor.RED + "Correct arguments: /assault admin modifyelo <faction> <add/remove> <win/loose/points> <value>");
+                    return true;
+                }
+                
+                String n = args[4];
+                if(!n.equals("win") && !n.equals("loose") && !n.equals("points")) {
+                    player.sendMessage(prefix + ChatColor.RED + "Correct arguments: /assault admin modifyelo <faction> <add/remove> <win/loose/points> <value>");
+                    return true;
+                }
+                
+                String value = args[5];
+                int v = Integer.parseInt(value);
+                
+                if(v <= 0) {
+                    player.sendMessage(prefix + ChatColor.RED + "Choose number lower of 0 !");
+                    return true;
+                }
+                
+                if(n.equals("add")) {
+                	int finalValue = plugin.getConfig().getInt("ranking." + faction.getTag() + "." + n) + v;
+                	player.sendMessage(prefix + ChatColor.GREEN + "You have correctly add " + v + " points to faction " + faction.getTag() + " for " + n + " value.");
+                    plugin.getConfig().set("ranking." + faction.getTag() + "." + n, finalValue);
+                    plugin.saveConfig();
+                }
+                
+                if(n.equals("remove")) {
+                	int finalValue = plugin.getConfig().getInt("ranking." + faction.getTag() + "." + n) - v;
+                	if(finalValue < 0) {
+                        player.sendMessage(prefix + ChatColor.RED + "You can't set this value, because result is lower than 0");
+                        return true;
+                	}
+                	player.sendMessage(prefix + ChatColor.GREEN + "You have correctly remove " + v + " points to faction " + faction.getTag() + " for " + n + " value.");
+                    plugin.getConfig().set("ranking." + faction.getTag() + "." + n, finalValue);
+                    plugin.saveConfig();
+                }
+                
             }
         } else if (subCommand.equals("ranking")) {
             String header = translateString(plugin.getConfig().getString("ranking_header"));
@@ -896,6 +957,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
         String defenseS = ChatColor.GOLD + "   • " + defenseFac.getTag() + " : ";
 
         String facTag = attackFac.getTag();
+        String dFacTag = defenseFac.getTag();
 
         int minutes = plugin.getConfig().getInt("assault.time_roaming." + facTag + ".min");
         int seconds = plugin.getConfig().getInt("assault.time_roaming." + facTag + ".sec");
@@ -908,10 +970,10 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
         String eAllyKey = ChatColor.RED + "• Alliés Défense: +";
 
         updatePlayerScoreboards(attackFac, index, attackS, defenseS, scoreKey, scoreValue, allyKey, eAllyKey, facTag);
-        updatePlayerScoreboards(defenseFac, index, attackS, defenseS, scoreKey, scoreValue, allyKey, eAllyKey, facTag);
+        updatePlayerScoreboards(defenseFac, index, attackS, defenseS, scoreKey, scoreValue, allyKey, eAllyKey, dFacTag);
 
         updateFactionAllies("assault.join.attack." + attackFac.getTag(), index, attackS, defenseS, scoreKey, scoreValue, allyKey, eAllyKey, facTag);
-        updateFactionAllies("assault.join.defense." + defenseFac.getTag(), index, attackS, defenseS, scoreKey, scoreValue, allyKey, eAllyKey, facTag);
+        updateFactionAllies("assault.join.defense." + defenseFac.getTag(), index, attackS, defenseS, scoreKey, scoreValue, allyKey, eAllyKey, dFacTag);
     }
 
     private void updatePlayerScoreboards(Faction faction, int index, String attackS, String defenseS, String scoreKey, String scoreValue, String allyKey, String eAllyKey, String facTag) {
