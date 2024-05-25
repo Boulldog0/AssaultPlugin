@@ -9,8 +9,6 @@ prefix: "&8[&bAssaut&8] "
 
 #Defined the message sent if a player executes a command without having permission
 no-permission: "&cVous n'avez pas la permission d'exécuter cette commande."
-#Define if you allow leave assault or no
-allow_assault_leave: true
 #Define if you allow join assault or no
 allow_assault_join: true
 

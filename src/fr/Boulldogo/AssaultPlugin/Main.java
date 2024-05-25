@@ -19,7 +19,7 @@ public class Main extends JavaPlugin {
 			this.getConfig().set("assault", null);
 		}
 		
-		String version = "1.1.1";
+		String version = "1.1.2";
 		Main.V = version;
 		
         GithubVersion versionChecker = new GithubVersion(this, version, "https://api.github.com/repos/Boulldog0/AssaultPlugin/releases/latest");

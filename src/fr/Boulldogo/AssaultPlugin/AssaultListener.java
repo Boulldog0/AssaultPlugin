@@ -20,7 +20,6 @@ import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.event.FPlayerJoinEvent;
-import com.massivecraft.factions.event.FPlayerLeaveEvent;
 
 public class AssaultListener implements Listener {
 	
@@ -106,60 +105,6 @@ public class AssaultListener implements Listener {
 				player.sendMessage(ChatColor.RED + "Download it at : https://www.spigotmc.org/resources/assaultplugin.116864/");
 			}
 		}
-	}
-	
-	@EventHandler
-	public void onPlayerLeaveFac(FPlayerLeaveEvent e) {
-	    Player player = e.getfPlayer().getPlayer();
-	    Faction playerFac = FPlayers.getInstance().getByPlayer(player).getFaction();
-
-	    if (!playerFac.isWilderness()) {
-	        if (!AssaultCommand.attackAssaultList.isEmpty() && AssaultCommand.attackAssaultList.contains(e.getFaction())) {
-	            if (plugin.getConfig().getBoolean("allow_assault_leave")) {
-	                Scoreboard board = player.getScoreboard();
-	                if (board != null) {
-	                    board.clearSlot(DisplaySlot.SIDEBAR);
-	                }
-	            } else {
-	                String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
-	                e.setCancelled(true);
-	                player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_cant_leave_faction_in_assault")));
-	            }
-	        } else if (!AssaultCommand.defenseAssaultList.isEmpty() && AssaultCommand.defenseAssaultList.contains(e.getFaction())) {
-	            if (plugin.getConfig().getBoolean("allow_assault_leave")) {
-	                Scoreboard board = player.getScoreboard();
-	                if (board != null) {
-	                    board.clearSlot(DisplaySlot.SIDEBAR);
-	                }
-	            } else {
-	                String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
-	                e.setCancelled(true);
-	                player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_cant_leave_faction_in_assault")));
-	            }
-	        } else if (!AssaultCommand.defenseJoinList.isEmpty() && AssaultCommand.defenseJoinList.contains(e.getFaction())) {
-	            if (plugin.getConfig().getBoolean("allow_assault_leave")) {
-	                Scoreboard board = player.getScoreboard();
-	                if (board != null) {
-	                    board.clearSlot(DisplaySlot.SIDEBAR);
-	                }
-	            } else {
-	                String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
-	                e.setCancelled(true);
-	                player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_cant_leave_faction_in_assault")));
-	            }
-	        } else if (!AssaultCommand.attackJoinList.isEmpty() && AssaultCommand.attackJoinList.contains(e.getFaction())) {
-	            if (plugin.getConfig().getBoolean("allow_assault_leave")) {
-	                Scoreboard board = player.getScoreboard();
-	                if (board != null) {
-	                    board.clearSlot(DisplaySlot.SIDEBAR);
-	                }
-	            }
-	        } else {
-	            String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
-	            e.setCancelled(true);
-	            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_cant_leave_faction_in_assault")));
-	        }
-	    }
 	}
 	
 	@SuppressWarnings("unlikely-arg-type")
