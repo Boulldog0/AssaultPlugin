@@ -1,5 +1,7 @@
 package fr.Boulldogo.AssaultPlugin;
 
+import java.util.Calendar;
+
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -9,6 +11,7 @@ import com.massivecraft.factions.Factions;
 public class Main extends JavaPlugin {
 	
 	public BukkitRunnable verification = null;
+	public BukkitRunnable weeklyVerif = null;
 	public Main plugin;
 	public static String V = "";
 	
@@ -19,7 +22,7 @@ public class Main extends JavaPlugin {
 			this.getConfig().set("assault", null);
 		}
 		
-		String version = "1.1.2";
+		String version = "1.1.3";
 		Main.V = version;
 		
         GithubVersion versionChecker = new GithubVersion(this, version, "https://api.github.com/repos/Boulldog0/AssaultPlugin/releases/latest");
@@ -71,6 +74,25 @@ public class Main extends JavaPlugin {
 	        }
 	    };
 	    verification.runTaskTimer(plugin, 0, 1200);
+	    
+	    new BukkitRunnable() {
+	        @Override
+	        public void run() {
+	            Calendar calendar = Calendar.getInstance();
+	            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY &&
+	                calendar.get(Calendar.HOUR_OF_DAY) == 0 &&
+	                calendar.get(Calendar.MINUTE) == 0) {
+	            	
+	            	for(Faction faction : Factions.getInstance().getAllFactions()) {
+	            		if(plugin.getConfig().contains("stats." + faction.getTag() + ".total_weekly")) {
+	            			plugin.getConfig().set("stats." + faction.getTag() + ".total_weekly", null);
+	            		}
+	            	}
+	            	
+	            	plugin.saveConfig();
+	            }
+	        }
+	    }.runTaskTimer(plugin, 0, 1200);
 	}
 
 

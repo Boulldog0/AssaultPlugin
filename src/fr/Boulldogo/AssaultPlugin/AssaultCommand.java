@@ -493,6 +493,16 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
             AssaultListener.attackScoreList.add(0);
             AssaultListener.defenseScoreList.add(0);
             
+            int attackAssault = plugin.getConfig().contains("stats." + playerFac.getTag() + ".total_assaults") ? plugin.getConfig().getInt("stats." + playerFac.getTag() + ".total_assaults") : 0;
+            int defenseAssault = plugin.getConfig().contains("stats." + faction.getTag() + ".total_assaults") ? plugin.getConfig().getInt("stats." + faction.getTag() + ".total_assaults") : 0;
+            int weeklyAttackAssault = plugin.getConfig().contains("stats." + playerFac.getTag() + ".weekly_assaults") ? plugin.getConfig().getInt("stats." + playerFac.getTag() + ".weekly_assaults") : 0;
+            int weeklyDefenseAssault = plugin.getConfig().contains("stats." + faction.getTag() + ".weekly_assaults") ? plugin.getConfig().getInt("stats." + faction.getTag() + ".weekly_assaults") : 0;
+            
+            plugin.getConfig().set("stats." + playerFac.getTag() + ".total_assaults", attackAssault + 1);
+            plugin.getConfig().set("stats." + faction.getTag() + ".total_assaults", defenseAssault + 1);
+            plugin.getConfig().set("stats." + playerFac.getTag() + ".total_weekly", weeklyAttackAssault + 1);
+            plugin.getConfig().set("stats." + faction.getTag() + ".total_weekly", weeklyDefenseAssault + 1);
+            
             int cooldownTime = plugin.getConfig().getInt("cooldown_behind_assaults");
             plugin.getConfig().set("cooldowns." + playerFac.getTag() + "." + faction.getTag(), cooldownTime);
             plugin.saveConfig();
