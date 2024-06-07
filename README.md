@@ -49,6 +49,7 @@ AssaultPlugin is a versatile plugin designed for factions servers, providing a c
 - `assault.bypass-restricted.block_interact` : Permission to bypass block interact restriction
 - `assault.bypass-restricted.block-place` : Permission to bypass block place restriction
 - `assault.bypass-restricted.block-break` : Permission to bypass block break restriction
+- `assault.use_enemy` : Permission for use /f enemy command if you are disable it for global players.
 
 #### Contribution and Support
 
@@ -107,6 +108,7 @@ AssaultPlugin est un plugin polyvalent conçu pour les serveurs de factions, off
 - `assault.bypass-restricted.block_interact` : Permission pour bypass la restriction d'interaction avec les blocs
 - `assault.bypass-restricted.block-place` : Permission pour bypass la restriction de la pose de blocs
 - `assault.bypass-restricted.block-break` : Permission pour bypass la restriction du cassage de blocs
+- `assault.use_enemy` : Permission permettant d'utiliser la commande /f enemy si celle ci est désactivé pour la globalité des joueurs.
 
 #### Contribution et Support
 

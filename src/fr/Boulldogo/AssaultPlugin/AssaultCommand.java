@@ -1,5 +1,9 @@
 package fr.Boulldogo.AssaultPlugin;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -213,7 +217,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
                     plugin.saveConfig();
                 }
                 
-            }
+            } 
         } else if (subCommand.equals("ranking")) {
             String header = translateString(plugin.getConfig().getString("ranking_header"));
             String lineTemplate = translateString(plugin.getConfig().getString("ranking_lines"));
@@ -463,6 +467,30 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
                 player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.they_are_cooldown_with_this_faction")
                         .replace("%m", String.valueOf(plugin.getConfig().getInt("cooldowns." + playerFac.getTag() + "." + faction.getTag())))));
                 return true;
+            }
+            
+            if (plugin.getConfig().getBoolean("use-countdown-of-non-assault")) {
+                int dayWithoutAssault = plugin.getConfig().getInt("non-assault-countdown");
+
+                long attackCreationTime = playerFac.getFoundedDate();
+                long defenseCreationTime = faction.getFoundedDate();
+
+                LocalDate attackCreationDate = Instant.ofEpochSecond(attackCreationTime)
+                                                       .atZone(ZoneId.systemDefault())
+                                                       .toLocalDate();
+                LocalDate defenseCreationDate = Instant.ofEpochSecond(defenseCreationTime)
+                                                        .atZone(ZoneId.systemDefault())
+                                                        .toLocalDate();
+
+                LocalDate currentDate = LocalDate.now();
+
+                long daysSinceAttackCreation = ChronoUnit.DAYS.between(attackCreationDate, currentDate);
+                long daysSinceDefenseCreation = ChronoUnit.DAYS.between(defenseCreationDate, currentDate);
+
+                if (daysSinceAttackCreation < dayWithoutAssault || daysSinceDefenseCreation < dayWithoutAssault || daysSinceDefenseCreation < dayWithoutAssault && daysSinceAttackCreation < dayWithoutAssault) {
+                	player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.assault_non_agression_countdown")));
+                	return true;
+                } 
             }
 
             String startTime = (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > 10 ? Calendar.getInstance().get(Calendar.HOUR_OF_DAY) : "0" + Calendar.getInstance().get(Calendar.HOUR_OF_DAY))  + ":" + (Calendar.getInstance().get(Calendar.MINUTE) > 10 ? Calendar.getInstance().get(Calendar.MINUTE) : "0" +  Calendar.getInstance().get(Calendar.MINUTE));

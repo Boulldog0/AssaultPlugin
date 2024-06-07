@@ -69,6 +69,16 @@ elo_points_to_give: 20
 elo_points_to_give_on_join: 5
 #Define assault points given on player kill
 point-per-kill: 5
+#Define if you want to use non assault countdown for new factions
+use-countdown-of-non-assault: true
+#Define non assault countdown for new faction (in days)
+non-assault-countdown: 3
+#Define if you want to use non assault system after /f enemy
+use-countdown-non-assault-after-enemy: true
+#Define non assault countdown after /f enemy (in minutes)
+countdown-non-assault-after-enemy: 10
+#Define if you want to disable direct enemy system (/f enemy) for normal players. Only players with permission assault.use_enemy can enemy if it set to true.
+disable-direct-enemy-system: false
 
 #=================Scoreboard Settings=======================#
 
@@ -208,6 +218,12 @@ messages:
   commands-restricted-in-assault: "&cVous ne pouvez executer cette commande en assaut !"
   #Define message sent when player trying to sent command who restricted excluding assault.
   commands-restricted-excluding-assault: "&cVous ne pouvez pas executer cette commande hors assaut !"
+  #Define message sent when player trying to disband faction, but this faction is in assault.
+  you_cant_disband: "&cVous ne pouvez pas disband votre faction car elle est en assaut !"
+  #Define message sent when player trying to assault other faction, but his faction or enemy faction has not enought days of creation.
+  assault_non_agression_countdown: "&cVous ne pouvez pas assaut cette faction, car celle ci ou la votre n'a pas suffisament de jours de création."
+  #Define message sent when player trying to set other faction in ennemy, but normal /f enemy system is disable and player has not the permission assault.use_enemy
+  you_cant_enemy: "&cVous ne pouvez pas mettre de faction en ennemi."
 #==================Server Settings========================#
 #=================DO NOT TOUCH IT !=======================#
 

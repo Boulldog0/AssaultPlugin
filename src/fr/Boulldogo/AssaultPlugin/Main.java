@@ -1,6 +1,11 @@
 package fr.Boulldogo.AssaultPlugin;
 
 import java.util.Calendar;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,6 +22,7 @@ public class Main extends JavaPlugin {
 	
 	public void onEnable() {
 		saveDefaultConfig();
+		mergeConfigDefaults();
 		
 		if(this.getConfig().contains("assault")) {
 			this.getConfig().set("assault", null);
@@ -50,14 +56,14 @@ public class Main extends JavaPlugin {
 
 	            for (Faction faction : Factions.getInstance().getAllFactions()) {
 	                String factionTag = faction.getTag();
-	                if (plugin.getConfig().contains("cooldowns." + factionTag)) {
+	                if(plugin.getConfig().contains("cooldowns." + factionTag)) {
 	                    for (Faction targetFaction : Factions.getInstance().getAllFactions()) {
 	                        String targetTag = targetFaction.getTag();
 	                        String path = "cooldowns." + factionTag + "." + targetTag;
 
-	                        if (plugin.getConfig().contains(path)) {
+	                        if(plugin.getConfig().contains(path)) {
 	                            int cooldown = plugin.getConfig().getInt(path);
-	                            if (cooldown - 1 <= 0) {
+	                            if(cooldown - 1 <= 0) {
 	                                plugin.getConfig().set(path, null);
 	                            } else {
 	                                plugin.getConfig().set(path, cooldown - 1);
@@ -68,7 +74,7 @@ public class Main extends JavaPlugin {
 	                }
 	            }
 
-	            if (hasChanges) {
+	            if(hasChanges) {
 	                plugin.saveConfig();
 	            }
 	        }
@@ -79,7 +85,7 @@ public class Main extends JavaPlugin {
 	        @Override
 	        public void run() {
 	            Calendar calendar = Calendar.getInstance();
-	            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY &&
+	            if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY &&
 	                calendar.get(Calendar.HOUR_OF_DAY) == 0 &&
 	                calendar.get(Calendar.MINUTE) == 0) {
 	            	
@@ -94,5 +100,26 @@ public class Main extends JavaPlugin {
 	        }
 	    }.runTaskTimer(plugin, 0, 1200);
 	}
+	
+    private void mergeConfigDefaults() {
+        InputStream defaultConfigStream = this.getResource("config.yml");
+        if(defaultConfigStream == null) {
+            return;
+        }
+
+        FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defaultConfigStream));
+        FileConfiguration currentConfig = this.getConfig();
+
+        mergeConfigurations(currentConfig, defaultConfig);
+        this.saveConfig();
+    }
+
+    private void mergeConfigurations(FileConfiguration currentConfig, FileConfiguration defaultConfig) {
+        for(String key : defaultConfig.getKeys(true)) {
+            if(!currentConfig.contains(key)) {
+                currentConfig.set(key, defaultConfig.get(key));
+            }
+        }
+    }
 
 }

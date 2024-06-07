@@ -20,6 +20,8 @@ import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.event.FPlayerJoinEvent;
+import com.massivecraft.factions.event.FactionDisbandEvent;
+import com.massivecraft.factions.event.FactionRelationWishEvent;
 
 public class AssaultListener implements Listener {
 	
@@ -142,6 +144,86 @@ public class AssaultListener implements Listener {
 	        String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
 			e.setCancelled(true);
 			player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_cant_join_faction_in_assault")));
+		}
+	}
+	
+	@EventHandler
+	public void onFactionDisband(FactionDisbandEvent e) {
+		String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
+		Faction faction = e.getFaction();
+		
+		if(AssaultCommand.attackAssaultList.contains(faction)
+		|| AssaultCommand.defenseAssaultList.contains(faction)
+		|| AssaultCommand.attackJoinList.contains(faction)
+		|| AssaultCommand.defenseJoinList.contains(faction)) {
+			e.setCancelled(true);
+			e.getPlayer().sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_cant_disband")));
+		}
+	}
+	
+	@EventHandler
+	public void onFactionChangeRelation(FactionRelationWishEvent e) {
+		String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
+		Player player = e.getfPlayer().getPlayer();
+		if(plugin.getConfig().getBoolean("use-countdown-non-assault-after-enemy")) {
+			if(!plugin.getConfig().getBoolean("disable-direct-enemy-system") && e.getTargetRelation().isEnemy()) {
+				int cd = plugin.getConfig().getInt("countdown-non-assault-after-enemy");
+				Faction playerFac = e.getFaction();
+				Faction faction = e.getTargetFaction();
+					
+				if(plugin.getConfig().contains("cooldown." + playerFac + "." + faction)) {
+					int cooldown = plugin.getConfig().getInt("cooldown." + playerFac + "." + faction);
+					if(cooldown <= cd) {
+						plugin.getConfig().set("cooldown." + playerFac + "." + faction, cd);
+						plugin.saveConfig();
+					}
+				} else {
+					plugin.getConfig().set("cooldown." + playerFac + "." + faction, cd);
+					plugin.saveConfig();
+				}
+					
+				if(plugin.getConfig().contains("cooldown." + faction + "." + playerFac)) {
+					int cooldown = plugin.getConfig().getInt("cooldown." + faction + "." + playerFac);
+					if(cooldown <= cd) {
+						plugin.getConfig().set("cooldown." + faction + "." + playerFac, cd);
+						plugin.saveConfig();
+					}
+				} else {
+					plugin.getConfig().set("cooldown." + faction + "." + playerFac, cd);
+					plugin.saveConfig();
+				}
+			} else if(e.getTargetRelation().isEnemy() && plugin.getConfig().getBoolean("disable-direct-enemy-system")) {
+				if(!player.hasPermission("assault.use_enemy")) {
+					player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_cant_enemy")));
+					e.setCancelled(true);
+				} else {
+					int cd = plugin.getConfig().getInt("countdown-non-assault-after-enemy");
+					Faction playerFac = e.getFaction();
+					Faction faction = e.getTargetFaction();
+					
+					if(plugin.getConfig().contains("cooldown." + playerFac + "." + faction)) {
+						int cooldown = plugin.getConfig().getInt("cooldown." + playerFac + "." + faction);
+						if(cooldown <= cd) {
+							plugin.getConfig().set("cooldown." + playerFac + "." + faction, cd);
+							plugin.saveConfig();
+						}
+					} else {
+						plugin.getConfig().set("cooldown." + playerFac + "." + faction, cd);
+						plugin.saveConfig();
+					}
+					
+					if(plugin.getConfig().contains("cooldown." + faction + "." + playerFac)) {
+						int cooldown = plugin.getConfig().getInt("cooldown." + faction + "." + playerFac);
+						if(cooldown <= cd) {
+							plugin.getConfig().set("cooldown." + faction + "." + playerFac, cd);
+							plugin.saveConfig();
+						}
+					} else {
+						plugin.getConfig().set("cooldown." + faction + "." + playerFac, cd);
+						plugin.saveConfig();
+					}
+				}
+			}
 		}
 	}
 	
