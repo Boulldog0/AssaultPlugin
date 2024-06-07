@@ -71,4 +71,9 @@ public class AssaultAPI {
         plugin.getConfig().set("ranking." + facName + ".loose", looses);
         plugin.saveConfig();
     }
+    
+    public void removeFaction(String facName) {
+        plugin.getConfig().set("ranking." + facName, null);
+        plugin.saveConfig();
+    }
 }
