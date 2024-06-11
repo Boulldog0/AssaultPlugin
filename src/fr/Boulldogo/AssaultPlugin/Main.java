@@ -1,9 +1,15 @@
 package fr.Boulldogo.AssaultPlugin;
 
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -13,6 +19,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 
+import fr.Boulldogo.AssaultPlugin.Commands.AssaultCommand;
+import fr.Boulldogo.AssaultPlugin.Listeners.AssaultListener;
+import fr.Boulldogo.AssaultPlugin.Listeners.InteractListener;
+import fr.Boulldogo.AssaultPlugin.Utils.GithubVersion;
+import fr.Boulldogo.AssaultPlugin.Utils.YamlUpdater;
+
 public class Main extends JavaPlugin {
 	
 	public BukkitRunnable verification = null;
@@ -21,6 +33,23 @@ public class Main extends JavaPlugin {
 	public static String V = "";
 	
 	public void onEnable() {
+		
+        Server server = getServer();
+        Pattern pattern = Pattern.compile("(^[^\\-]*)");
+        Matcher matcher = pattern.matcher(server.getBukkitVersion());
+        if(!matcher.find()) {
+            this.getLogger().severe("Could not find Bukkit version... Disabling plugin...");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+        
+        File file = new File(this.getDataFolder(), "config.yml");
+        if(!file.exists()) {	
+        	this.getLogger().info("Creating new config.yml ! The server will restart to apply the changes. Consider configuring the configuration");
+    		saveDefaultConfig();
+    		Bukkit.getServer().spigot().restart();
+        }
+        
 		saveDefaultConfig();
 		mergeConfigDefaults();
 		
@@ -28,7 +57,10 @@ public class Main extends JavaPlugin {
 			this.getConfig().set("assault", null);
 		}
 		
-		String version = "1.1.4";
+		YamlUpdater updater = new YamlUpdater(this);
+		updater.updateYamlFiles(new String[] {"config.yml"});
+		
+		String version = "1.2.0";
 		Main.V = version;
 		
         GithubVersion versionChecker = new GithubVersion(this, version, "https://api.github.com/repos/Boulldog0/AssaultPlugin/releases/latest");
@@ -40,11 +72,11 @@ public class Main extends JavaPlugin {
 		this.getCommand("assault").setExecutor(new AssaultCommand(this));
 		this.getServer().getPluginManager().registerEvents(new AssaultListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new InteractListener(this), this);
-		this.getLogger().info("Plugin assault version 1.1.1 by Boulldogo loaded with success !");
+		this.getLogger().info("Plugin assault version 1.2.0 by Boulldogo loaded with success !");
 	}
 	
 	public void onDisable() {
-		this.getLogger().info("Plugin assault version 1.1.1 by Boulldogo unloaded with success !");
+		this.getLogger().info("Plugin assault version 1.2.0 by Boulldogo unloaded with success !");
 	}
 	
 	public void startCooldownVerification() {

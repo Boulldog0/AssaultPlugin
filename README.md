@@ -12,11 +12,12 @@ AssaultPlugin is a versatile plugin designed for factions servers, providing a c
 - 📊 Scoreboard Integration: Dynamic scoreboard updates during assaults.
 - ⚙️ Fully Configurable: Highly customizable plugin settings to tailor the experience to your server's needs.
 - 🔧 Admin Commands: Admin commands for resetting cooldowns and stopping ongoing assaults.
+- 🏳️ Punish players : You can punish players when they disconnect in assault if they tagged. You can configure if you want to give death in opponent side of the player if you want
 
 #### Todo List
 
 - 🛡️ Custom Player Titles: Introduce the ability to customize player titles for attackers/defenders.
-- 🪦 Anti Deconnexion System : Introduce new system for count kill in score if player who already tagged in the assault disconnecting.
+- 🪦 (✅) Anti Deconnexion System : Introduce new system for count kill in score if player who already tagged in the assault disconnecting.
 - 🕰️ Cooldown before pvp : Introduce new system for add period without pvp on assault start for let players prepare.
 
 #### Commands
@@ -39,7 +40,7 @@ AssaultPlugin is a versatile plugin designed for factions servers, providing a c
 #### Requirements
 
 - **Faction Plugin:** [SaberFactions](https://github.com/SaberLLC/Saber-Factions)
-- **Plugin Version:** 1.8 to 1.12.2
+- **Plugin Version:** 1.7 à 1.20.6
 
 #### Permissions
 
@@ -71,11 +72,12 @@ AssaultPlugin est un plugin polyvalent conçu pour les serveurs de factions, off
 - 📊 Intégration du tableau de bord : Mises à jour dynamiques du tableau de bord pendant les assauts.
 - ⚙️ Entièrement configurable : Paramètres du plugin hautement personnalisables pour adapter l'expérience aux besoins de votre serveur.
 - 🔧 Commandes d'administration : Commandes d'administration pour réinitialiser les cooldowns et arrêter les assauts en cours.
+- 🏳️ Punissez les joueurs : Vous pouvez punir les joueurs qui se déconnectent en assaut en configurant si vous souhaitez donner un kill au camp adverse.
 
 #### Liste des tâches à accomplir
 
 - 🛡️ Titres personnalisés des joueurs : Introduire la possibilité de personnaliser les titres des joueurs pour les attaquants/défenseurs.
-- 🪦 Système anti deconnexion : Introduire un système permettant de compter un kill dans le score si un joueur ayant déjà été tag dans l'assaut se deconnecte
+- 🪦 (✅) Système anti deconnexion : Introduire un système permettant de compter un kill dans le score si un joueur ayant déjà été tag dans l'assaut se deconnecte
 - 🕰️ Cooldown avant pvp : Introduire un système permettant d'ajouter une periode sans pvp lors du début d'un assaut pour laisser le temps aux joueurs de se préparer.
 
 #### Commandes
@@ -98,7 +100,7 @@ AssaultPlugin est un plugin polyvalent conçu pour les serveurs de factions, off
 #### Prérequis
 
 - **Plugin Faction :** [SaberFactions](https://github.com/SaberLLC/Saber-Factions)
-- **Version du Plugin :** 1.8 à 1.12.2
+- **Version du Plugin :** 1.7 à 1.20.6
 
 #### Permissions
 

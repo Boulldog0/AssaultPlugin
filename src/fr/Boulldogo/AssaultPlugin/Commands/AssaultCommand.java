@@ -1,4 +1,4 @@
-package fr.Boulldogo.AssaultPlugin;
+package fr.Boulldogo.AssaultPlugin.Commands;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,6 +35,14 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.struct.Relation;
 import com.massivecraft.factions.struct.Role;
+
+import fr.Boulldogo.AssaultPlugin.Main;
+import fr.Boulldogo.AssaultPlugin.Events.AssaultLooseEvent;
+import fr.Boulldogo.AssaultPlugin.Events.AssaultStartEvent;
+import fr.Boulldogo.AssaultPlugin.Events.AssaultStopEvent;
+import fr.Boulldogo.AssaultPlugin.Events.AssaultWinEvent;
+import fr.Boulldogo.AssaultPlugin.Listeners.AssaultListener;
+import fr.Boulldogo.AssaultPlugin.Utils.FactionRanking;
 
 public class AssaultCommand implements CommandExecutor, TabCompleter {
 
@@ -518,6 +529,9 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
             plugin.getConfig().set("assault.join.defense." + faction.getTag(), emptyList);
             plugin.saveConfig();
             
+            AssaultStartEvent startEvent = new AssaultStartEvent(playerFac, faction, player);
+	        Bukkit.getServer().getPluginManager().callEvent(startEvent);
+            
             AssaultListener.attackScoreList.add(0);
             AssaultListener.defenseScoreList.add(0);
             
@@ -817,6 +831,17 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
         Faction winner = (playerFacScore > factionScore) ? playerFac : faction;
         Faction looser = (winner == faction) ? playerFac : faction;
         
+        Iterator<Map.Entry<Player, Faction>> iterator = AssaultListener.taggedPlayer.entrySet().iterator();
+        while(iterator.hasNext()) {
+            Entry<Player, Faction> entry = iterator.next();
+            if(entry.getValue().equals(winner)) {
+                iterator.remove();
+            }
+            if(entry.getValue().equals(looser)) {
+            	iterator.remove();
+            }
+        }
+        
         int winnerScore = (winner == faction) ? factionScore : playerFacScore;
         int looserScore = (winner == faction) ? playerFacScore : factionScore;
 
@@ -837,10 +862,17 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
             	plugin.saveConfig();
             }
             
+            AssaultWinEvent winEvent = new AssaultWinEvent(winner, winnerScore, pointToGive);
+            Bukkit.getServer().getPluginManager().callEvent(winEvent);
+            
             if(pointToGive2 != 0) {
             	String sideWin = (winner == playerFac) ? "attack" : "defense";
             	String sideLoose = (winner == playerFac) ? "defense" : "attack";
             	List<String> joiningFaction = plugin.getConfig().getStringList("assault.join." + sideWin + "." + winner.getTag()); 
+            	
+            	List<Faction> winnerJoin = new ArrayList<>();
+            	List<Faction> looserJoin = new ArrayList<>();
+            	
             	for(int i = 0; i < joiningFaction.size(); i++) {
             		if(plugin.getConfig().contains("ranking." + joiningFaction.get(i) + ".points")) {
                     	int oldPoints2 = plugin.getConfig().getInt("ranking." + joiningFaction.get(i) + ".points");
@@ -852,6 +884,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
                     	plugin.saveConfig();
             		}
             		Faction fw = Factions.getInstance().getByTag(joiningFaction.get(i));
+            		winnerJoin.add(fw);
             		fw.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_win_elo_on_join_assault").replace("%e", String.valueOf(pointToGive2)))));
             	}
             	
@@ -867,8 +900,12 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
                     	plugin.saveConfig();
             		}
             		Faction fw = Factions.getInstance().getByTag(joiningFactionLoose.get(i));
+            		looserJoin.add(fw);
             		fw.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_loose_elo_on_join_assault").replace("%e", String.valueOf(pointToGive2)))));
             	}
+            	
+            	AssaultStopEvent stopEvent = new AssaultStopEvent(winner, looser, winnerJoin, looserJoin, winnerScore, looserScore);
+            	Bukkit.getServer().getPluginManager().callEvent(stopEvent);
             }
             
             if(plugin.getConfig().contains("ranking." + looser.getTag())) {
@@ -889,6 +926,9 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
             	plugin.getConfig().set("ranking." + looser.getTag() + ".loose", 1);
             	plugin.saveConfig();
             }
+            
+            AssaultLooseEvent looseEvent = new AssaultLooseEvent(looser, looserScore, pointToGive);
+            Bukkit.getServer().getPluginManager().callEvent(looseEvent);
         } else {
             Bukkit.broadcastMessage(prefix + translateString(plugin.getConfig().getString("messages.assault_equality").replace("%d", faction.getTag()).replace("%a", playerFac.getTag()).replace("%p", String.valueOf(playerFacScore))));
         }

@@ -1,4 +1,4 @@
-package fr.Boulldogo.AssaultPlugin;
+package fr.Boulldogo.AssaultPlugin.Utils;
 
 public class FactionRanking {
     private final String factionName;

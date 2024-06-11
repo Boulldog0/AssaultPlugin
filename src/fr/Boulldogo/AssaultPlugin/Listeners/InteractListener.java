@@ -1,4 +1,4 @@
-package fr.Boulldogo.AssaultPlugin;
+package fr.Boulldogo.AssaultPlugin.Listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,6 +13,9 @@ import org.bukkit.inventory.ItemStack;
 
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
+
+import fr.Boulldogo.AssaultPlugin.Main;
+import fr.Boulldogo.AssaultPlugin.Commands.AssaultCommand;
 
 public class InteractListener implements Listener {
 
@@ -31,10 +34,9 @@ public class InteractListener implements Listener {
 
         if (stack != null) {
             Material material = stack.getType();
-            @SuppressWarnings("deprecation")
-			int id = material.getId();
+			String id = String.valueOf(material);
             if (!player.hasPermission("assault.bypass-restricted.items_interact")) {
-                if (plugin.getConfig().getIntegerList("interaction-item-restricted-in-assault").contains(id)) {
+                if (plugin.getConfig().getStringList("interaction-item-restricted-in-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
                     if (!faction.isWilderness()) {
                         if (isInAssault(faction)) {
@@ -44,7 +46,7 @@ public class InteractListener implements Listener {
                     }
                 }
 
-                if (plugin.getConfig().getIntegerList("interaction-item-restricted-excluding-assault").contains(id)) {
+                if (plugin.getConfig().getStringList("interaction-item-restricted-excluding-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
                     if (!faction.isWilderness()) {
                         if (!isInAssault(faction)) {
@@ -58,10 +60,9 @@ public class InteractListener implements Listener {
 
         if (block != null) {
             Material material = block.getType();
-            @SuppressWarnings("deprecation")
-			int id = material.getId();
+			String id = String.valueOf(material);
             if (!player.hasPermission("assault.bypass-restricted.block_interact")) {
-                if (plugin.getConfig().getIntegerList("interaction-block-restricted-in-assault").contains(id)) {
+                if (plugin.getConfig().getStringList("interaction-block-restricted-in-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
                     if (!faction.isWilderness()) {
                         if (isInAssault(faction)) {
@@ -71,7 +72,7 @@ public class InteractListener implements Listener {
                     }
                 }
 
-                if (plugin.getConfig().getIntegerList("interaction-block-restricted-excluding-assault").contains(id)) {
+                if (plugin.getConfig().getStringList("interaction-block-restricted-excluding-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
                     if (!faction.isWilderness()) {
                         if (!isInAssault(faction)) {
@@ -91,10 +92,9 @@ public class InteractListener implements Listener {
         Player player = e.getPlayer();
         if (block != null) {
             Material material = block.getType();
-            @SuppressWarnings("deprecation")
-			int id = material.getId();
+			String id = String.valueOf(material);
             if (!player.hasPermission("assault.bypass-restricted.block-place")) {
-                if (plugin.getConfig().getIntegerList("block-place-restricted-in-assault").contains(id)) {
+                if (plugin.getConfig().getStringList("block-place-restricted-in-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
                     if (!faction.isWilderness()) {
                         if (isInAssault(faction)) {
@@ -104,7 +104,7 @@ public class InteractListener implements Listener {
                     }
                 }
 
-                if (plugin.getConfig().getIntegerList("block-place-restricted-excluding-assault").contains(id)) {
+                if (plugin.getConfig().getStringList("block-place-restricted-excluding-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
                     if (!faction.isWilderness()) {
                         if (!isInAssault(faction)) {
@@ -124,10 +124,9 @@ public class InteractListener implements Listener {
         Player player = e.getPlayer();
         if (block != null) {
             Material material = block.getType();
-            @SuppressWarnings("deprecation")
-			int id = material.getId();
-            if (!player.hasPermission("assault.bypass-restricted.block-break")) { // Correction ici
-                if (plugin.getConfig().getIntegerList("block-break-restricted-in-assault").contains(id)) {
+			String id = String.valueOf(material);
+            if (!player.hasPermission("assault.bypass-restricted.block-break")) { 
+                if (plugin.getConfig().getStringList("block-break-restricted-in-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
                     if (!faction.isWilderness()) {
                         if (isInAssault(faction)) {
@@ -137,7 +136,7 @@ public class InteractListener implements Listener {
                     }
                 }
 
-                if (plugin.getConfig().getIntegerList("block-break-restricted-excluding-assault").contains(id)) {
+                if (plugin.getConfig().getStringList("block-break-restricted-excluding-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
                     if (!faction.isWilderness()) {
                         if (!isInAssault(faction)) {

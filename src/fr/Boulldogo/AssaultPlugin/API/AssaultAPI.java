@@ -1,11 +1,13 @@
-package fr.Boulldogo.AssaultPlugin;
+package fr.Boulldogo.AssaultPlugin.API;
+
+import fr.Boulldogo.AssaultPlugin.Main;
 
 public class AssaultAPI {
     
     private static AssaultAPI instance;
     private final Main plugin;
 
-    private AssaultAPI(Main plugin) {
+    public AssaultAPI(Main plugin) {
         this.plugin = plugin;
     }
 

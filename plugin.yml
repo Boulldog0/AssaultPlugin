@@ -1,8 +1,9 @@
 name: AssaultPlugin
 description: Plugin of assault with SaberFactions 
 main: fr.Boulldogo.AssaultPlugin.Main 
-version: 1.1.4
+version: 1.2.0
 depends: [SaberFactions]
+api-version: 1.13
 commands:
   assault:
     description: Main command of the assault plugin

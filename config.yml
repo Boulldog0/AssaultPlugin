@@ -79,6 +79,10 @@ use-countdown-non-assault-after-enemy: true
 countdown-non-assault-after-enemy: 10
 #Define if you want to disable direct enemy system (/f enemy) for normal players. Only players with permission assault.use_enemy can enemy if it set to true.
 disable-direct-enemy-system: false
+#Define if you want to disable anti deconnexion system, who count kill when tagged player disconnect in assault after a certains number of seconds.
+enable_anti_deconnexion_system: true
+#Define seconds before kill count when player disconnect in assault
+count_kill_after: 120
 
 #=================Scoreboard Settings=======================#
 
@@ -91,43 +95,43 @@ enable_assault_scoreboard: true
 
 #Add new line with numeric ID for restrict items in assault
 interaction-item-restricted-in-assault:
-  - 9000
-  - 9001
+  - LOG
+  - DIAMOND_SWORD
 
 #Add new line with numeric ID for restrict items excluding assault
 interaction-item-restricted-excluding-assault:
-  - 9000
-  - 9001
+  - LOG
+  - DIAMOND_SWORD
 
 #Add new line with numeric ID for rectrict block interact in assault
 interaction-block-restricted-in-assault:
-  - 9000
-  - 9001
+  - LOG
+  - DIAMOND_SWORD
 
 #Add new line with numeric ID for rectrict block interact excluding assault
 interaction-block-restricted-excluding-assault:
-  - 9000
-  - 9001
+  - LOG
+  - DIAMOND_SWORD
 
 #Add new line with numeric ID for rectrict block place in assault
 block-place-restricted-in-assault:
-  - 9000
-  - 9001
+  - LOG
+  - DIAMOND_SWORD
 
 #Add new line with numeric ID for rectrict block place excluding assault
 block-place-restricted-excluding-assault:
-  - 9000
-  - 9001
+  - LOG
+  - DIAMOND_SWORD
 
 #Add new line with numeric ID for rectrict block break in assault
 block-break-restricted-in-assault:
-  - 9000
-  - 9001
+  - LOG
+  - DIAMOND_SWORD
 
 #Add new line with numeric ID for rectrict block break excluding assault
 block-break-restricted-excluding-assault:
-  - 9000
-  - 9001
+  - LOG
+  - DIAMOND_SWORD
 
 #=================Messages Settings=======================#
 
@@ -224,6 +228,18 @@ messages:
   assault_non_agression_countdown: "&cVous ne pouvez pas assaut cette faction, car celle ci ou la votre n'a pas suffisament de jours de création."
   #Define message sent when player trying to set other faction in ennemy, but normal /f enemy system is disable and player has not the permission assault.use_enemy
   you_cant_enemy: "&cVous ne pouvez pas mettre de faction en ennemi."
+  #Define message sent when player disconnect in assault and is tagged. 
+  #Placeholder : %s >> Secondes before kill count.
+  player_disconnect_in_your_camp: "&cUn joueur viens de déconnecter dans votre camp ! Celui ci a %s secondes pour se reconnecter, ou le kill sera compté pour le camp adverse."
+  #Define message sent when player disconnect in assault and is tagged in enemy faction. 
+  #Placeholder : %s >> Secondes before kill count.
+  player_disconnect_in_enemy_camp: "&aUn joueur viens de déconnecter dans le camp adverse ! Celui ci a %s secondes pour se reconnecter, ou le kill sera compté pour votre camp."
+  #Define message sent when player is tagged
+  you_are_tagged: "&cVous êtes désormais tag dans cet assaut. Si vous déconnectez, le kill comptera pour le camp adverse."
+  #Define message sent when player disconnect, and kill is count for enemy faction.
+  disconnect_kill_count_pf: "&cLa déconnexion de l'un des membres de votre assaut à donné des points à votre ennemi."
+  #Define message sent when enemy player disconnect, and kill is count for you'r faction.
+  disconnect_kill_count: "&aLa déconnexion de l'un des membres adverse vous à donné des points de kill."
 #==================Server Settings========================#
 #=================DO NOT TOUCH IT !=======================#
 

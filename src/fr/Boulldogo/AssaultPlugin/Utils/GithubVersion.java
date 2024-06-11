@@ -1,4 +1,4 @@
-package fr.Boulldogo.AssaultPlugin;
+package fr.Boulldogo.AssaultPlugin.Utils;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONObject;
