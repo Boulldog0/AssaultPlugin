@@ -60,7 +60,7 @@ public class Main extends JavaPlugin {
 		YamlUpdater updater = new YamlUpdater(this);
 		updater.updateYamlFiles(new String[] {"config.yml"});
 		
-		String version = "1.2.0";
+		String version = "1.2.1";
 		Main.V = version;
 		
         GithubVersion versionChecker = new GithubVersion(this, version, "https://api.github.com/repos/Boulldog0/AssaultPlugin/releases/latest");
@@ -72,11 +72,11 @@ public class Main extends JavaPlugin {
 		this.getCommand("assault").setExecutor(new AssaultCommand(this));
 		this.getServer().getPluginManager().registerEvents(new AssaultListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new InteractListener(this), this);
-		this.getLogger().info("Plugin assault version 1.2.0 by Boulldogo loaded with success !");
+		this.getLogger().info("Plugin assault version 1.2.1 by Boulldogo loaded with success !");
 	}
 	
 	public void onDisable() {
-		this.getLogger().info("Plugin assault version 1.2.0 by Boulldogo unloaded with success !");
+		this.getLogger().info("Plugin assault version 1.2.1 by Boulldogo unloaded with success !");
 	}
 	
 	public void startCooldownVerification() {

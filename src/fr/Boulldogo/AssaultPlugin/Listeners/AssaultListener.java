@@ -57,45 +57,47 @@ public class AssaultListener implements Listener {
         Player player = e.getEntity();
         Faction playerFac = FPlayers.getInstance().getByPlayer(player).getFaction();
         if (!playerFac.isWilderness()) {
-            int index = 0;
-            if (!AssaultCommand.attackAssaultList.isEmpty() && AssaultCommand.attackAssaultList.contains(playerFac)) {
-                index = AssaultCommand.attackAssaultList.indexOf(playerFac);
-                int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
-                defenseScoreList.set(index, defenseScoreList.get(index) + scoreToAdd);
-                Faction faction = AssaultCommand.defenseAssaultList.get(index);
-                KillInAssaultEvent killEvent = new KillInAssaultEvent(player, scoreToAdd, playerFac, faction);
-                Bukkit.getServer().getPluginManager().callEvent(killEvent);
-            } else if (!AssaultCommand.defenseAssaultList.isEmpty() && AssaultCommand.defenseAssaultList.contains(playerFac)) {
-                index = AssaultCommand.defenseAssaultList.indexOf(playerFac);
-                int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
-                attackScoreList.set(index, attackScoreList.get(index) + scoreToAdd);
-                Faction faction = AssaultCommand.attackAssaultList.get(index);
-                KillInAssaultEvent killEvent = new KillInAssaultEvent(player, scoreToAdd, playerFac, faction);
-                Bukkit.getServer().getPluginManager().callEvent(killEvent);
-            } else if(!AssaultCommand.attackJoinList.isEmpty() && AssaultCommand.attackJoinList.contains(playerFac)) {
-				for(int i = 0; i < AssaultCommand.attackAssaultList.size(); i++) {
-					if(plugin.getConfig().getStringList("assault.join.attack." + AssaultCommand.attackAssaultList.get(i).getTag()).contains(playerFac)) {
-						index = AssaultCommand.attackAssaultList.lastIndexOf(AssaultCommand.attackAssaultList.get(i));
-					}
-				}
-                int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
-                Faction faction = AssaultCommand.defenseAssaultList.get(index);
-                KillInAssaultEvent killEvent = new KillInAssaultEvent(player, scoreToAdd, playerFac, faction);
-                Bukkit.getServer().getPluginManager().callEvent(killEvent);
-                defenseScoreList.set(index, defenseScoreList.get(index) + scoreToAdd);
-			} else if(!AssaultCommand.defenseJoinList.isEmpty() && AssaultCommand.defenseJoinList.contains(playerFac)) {
-				for(int i = 0; i < AssaultCommand.defenseAssaultList.size(); i++) {
-					if(plugin.getConfig().getStringList("assault.join.defense." + AssaultCommand.defenseAssaultList.get(i).getTag()).contains(playerFac)) {
-						index = AssaultCommand.defenseAssaultList.lastIndexOf(AssaultCommand.defenseAssaultList.get(i));
-					}
-				}
-                int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
-                Faction faction = AssaultCommand.defenseAssaultList.get(index);
-                KillInAssaultEvent killEvent = new KillInAssaultEvent(player, scoreToAdd, playerFac, faction);
-                Bukkit.getServer().getPluginManager().callEvent(killEvent);
-                attackScoreList.set(index, attackScoreList.get(index) + scoreToAdd);
-			}
-            updateScoreboard(index);
+        	if(!AssaultCommand.attackAssaultList.isEmpty() && !AssaultCommand.defenseAssaultList.isEmpty()) {
+                int index = 0;
+                if (!AssaultCommand.attackAssaultList.isEmpty() && AssaultCommand.attackAssaultList.contains(playerFac)) {
+                    index = AssaultCommand.attackAssaultList.indexOf(playerFac);
+                    int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
+                    defenseScoreList.set(index, defenseScoreList.get(index) + scoreToAdd);
+                    Faction faction = AssaultCommand.defenseAssaultList.get(index);
+                    KillInAssaultEvent killEvent = new KillInAssaultEvent(player, scoreToAdd, playerFac, faction);
+                    Bukkit.getServer().getPluginManager().callEvent(killEvent);
+                } else if (!AssaultCommand.defenseAssaultList.isEmpty() && AssaultCommand.defenseAssaultList.contains(playerFac)) {
+                    index = AssaultCommand.defenseAssaultList.indexOf(playerFac);
+                    int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
+                    attackScoreList.set(index, attackScoreList.get(index) + scoreToAdd);
+                    Faction faction = AssaultCommand.attackAssaultList.get(index);
+                    KillInAssaultEvent killEvent = new KillInAssaultEvent(player, scoreToAdd, playerFac, faction);
+                    Bukkit.getServer().getPluginManager().callEvent(killEvent);
+                } else if(!AssaultCommand.attackJoinList.isEmpty() && AssaultCommand.attackJoinList.contains(playerFac)) {
+    				for(int i = 0; i < AssaultCommand.attackAssaultList.size(); i++) {
+    					if(plugin.getConfig().getStringList("assault.join.attack." + AssaultCommand.attackAssaultList.get(i).getTag()).contains(playerFac)) {
+    						index = AssaultCommand.attackAssaultList.lastIndexOf(AssaultCommand.attackAssaultList.get(i));
+    					}
+    				}
+                    int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
+                    Faction faction = AssaultCommand.defenseAssaultList.get(index);
+                    KillInAssaultEvent killEvent = new KillInAssaultEvent(player, scoreToAdd, playerFac, faction);
+                    Bukkit.getServer().getPluginManager().callEvent(killEvent);
+                    defenseScoreList.set(index, defenseScoreList.get(index) + scoreToAdd);
+    			} else if(!AssaultCommand.defenseJoinList.isEmpty() && AssaultCommand.defenseJoinList.contains(playerFac)) {
+    				for(int i = 0; i < AssaultCommand.defenseAssaultList.size(); i++) {
+    					if(plugin.getConfig().getStringList("assault.join.defense." + AssaultCommand.defenseAssaultList.get(i).getTag()).contains(playerFac)) {
+    						index = AssaultCommand.defenseAssaultList.lastIndexOf(AssaultCommand.defenseAssaultList.get(i));
+    					}
+    				}
+                    int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
+                    Faction faction = AssaultCommand.defenseAssaultList.get(index);
+                    KillInAssaultEvent killEvent = new KillInAssaultEvent(player, scoreToAdd, playerFac, faction);
+                    Bukkit.getServer().getPluginManager().callEvent(killEvent);
+                    attackScoreList.set(index, attackScoreList.get(index) + scoreToAdd);
+    			}
+                updateScoreboard(index);
+        	}
         }
     }
     
