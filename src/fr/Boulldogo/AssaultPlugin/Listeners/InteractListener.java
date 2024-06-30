@@ -46,12 +46,12 @@ public class InteractListener implements Listener {
                     }
                 }
 
-                if (plugin.getConfig().getStringList("interaction-item-restricted-excluding-assault").contains(id)) {
+                if (plugin.getConfig().getStringList("interaction-item-restricted-outside-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
                     if (!faction.isWilderness()) {
                         if (!isInAssault(faction)) {
                             e.setCancelled(true);
-                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.restricted-item-excluding-assault")));
+                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.restricted-item-outside-assault")));
                         }
                     }
                 }
@@ -72,12 +72,12 @@ public class InteractListener implements Listener {
                     }
                 }
 
-                if (plugin.getConfig().getStringList("interaction-block-restricted-excluding-assault").contains(id)) {
+                if (plugin.getConfig().getStringList("interaction-block-restricted-outside-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
                     if (!faction.isWilderness()) {
                         if (!isInAssault(faction)) {
                             e.setCancelled(true);
-                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.restricted-block-excluding-assault")));
+                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.restricted-block-outside-assault")));
                         }
                     }
                 }
@@ -104,12 +104,12 @@ public class InteractListener implements Listener {
                     }
                 }
 
-                if (plugin.getConfig().getStringList("block-place-restricted-excluding-assault").contains(id)) {
+                if (plugin.getConfig().getStringList("block-place-restricted-outside-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
                     if (!faction.isWilderness()) {
                         if (!isInAssault(faction)) {
                             e.setCancelled(true);
-                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.block-place-excluding-assault")));
+                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.block-place-outside-assault")));
                         }
                     }
                 }
@@ -136,12 +136,12 @@ public class InteractListener implements Listener {
                     }
                 }
 
-                if (plugin.getConfig().getStringList("block-break-restricted-excluding-assault").contains(id)) {
+                if (plugin.getConfig().getStringList("block-break-restricted-outside-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
                     if (!faction.isWilderness()) {
                         if (!isInAssault(faction)) {
                             e.setCancelled(true);
-                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.block-break-excluding-assault")));
+                            player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.block-break-outside-assault")));
                         }
                     }
                 }

@@ -46,6 +46,13 @@ play_sound: true
 #Define sound played when a player start assault
 played_sound: ENTITY_PLAYER_LEVELUP
 
+#=================Pvp Assault Settings=======================#
+
+#Define if you want to disable the pvp if players are not in the same assault (between them)
+disable-inter-assault-pvp: true
+#Define if you want to disable the pvp in faction territory who are not in assault (enable per default with SaberFactions)
+disable-default-faction-pvp: true
+
 #=================Assaults Settings=======================#
 
 #Define cooldown behind start two assault
@@ -98,8 +105,8 @@ interaction-item-restricted-in-assault:
   - LOG
   - DIAMOND_SWORD
 
-#Add new line with numeric ID for restrict items excluding assault
-interaction-item-restricted-excluding-assault:
+#Add new line with numeric ID for restrict items outside assault
+interaction-item-restricted-outside-assault:
   - LOG
   - DIAMOND_SWORD
 
@@ -108,8 +115,8 @@ interaction-block-restricted-in-assault:
   - LOG
   - DIAMOND_SWORD
 
-#Add new line with numeric ID for rectrict block interact excluding assault
-interaction-block-restricted-excluding-assault:
+#Add new line with numeric ID for rectrict block interact outside assault
+interaction-block-restricted-outside-assault:
   - LOG
   - DIAMOND_SWORD
 
@@ -118,8 +125,8 @@ block-place-restricted-in-assault:
   - LOG
   - DIAMOND_SWORD
 
-#Add new line with numeric ID for rectrict block place excluding assault
-block-place-restricted-excluding-assault:
+#Add new line with numeric ID for rectrict block place outside assault
+block-place-restricted-outside-assault:
   - LOG
   - DIAMOND_SWORD
 
@@ -128,8 +135,8 @@ block-break-restricted-in-assault:
   - LOG
   - DIAMOND_SWORD
 
-#Add new line with numeric ID for rectrict block break excluding assault
-block-break-restricted-excluding-assault:
+#Add new line with numeric ID for rectrict block break outside assault
+block-break-restricted-outside-assault:
   - LOG
   - DIAMOND_SWORD
 
@@ -204,24 +211,24 @@ messages:
   they_are_cooldown_with_this_faction: "&cVous ne pouvez pas assaut cette faction avant %m minutes."
   #Define message sent when player using item in assault, but this item is restricted in assault.
   restricted-item-in-assault: "&cVous ne pouvez pas intéragir avec cette item en assaut !"
-  #Define message sent when player using item excluding assault, but this item is restricted excluding assault.
-  restricted-item-excluding-assault: "&cVous ne pouvez pas intéragir avec cette item hors assaut !"
+  #Define message sent when player using item outside assault, but this item is restricted outside assault.
+  restricted-item-outside-assault: "&cVous ne pouvez pas intéragir avec cette item hors assaut !"
   #Define message sent when player using block interaction in assault, but this block interaction is restricted in assault.
   restricted-block-in-assault: "&cVous ne pouvez pas intéragir avec ce bloc en assaut !"
-  #Define message sent when player using block interaction excluding assault, but this block interaction is restricted excluding assault.
-  restricted-block-excluding-assault: "&cVous ne pouvez pas intéragir avec ce bloc hors assaut !"
+  #Define message sent when player using block interaction outside assault, but this block interaction is restricted outside assault.
+  restricted-block-outside-assault: "&cVous ne pouvez pas intéragir avec ce bloc hors assaut !"
   #Define message sent when player place block who restricted in assault.
   block-place-in-assault: "&cVous ne pouvez pas poser ce bloc en assaut !"
-  #Define message sent when player place block who restricted excluding assault.
-  block-place-excluding-assault: "&cVous ne pouvez pas poser ce bloc hors assaut !"
+  #Define message sent when player place block who restricted outside assault.
+  block-place-outside-assault: "&cVous ne pouvez pas poser ce bloc hors assaut !"
   #Define message sent when player break block who restricted in assault."
   block-break-in-assault: "&cVous ne pouvez pas casser ce bloc en assaut !"
-  #Define message sent when player break block who restricted excluding assault."
-  block-break-excluding-assault: "&cVous ne pouvez pas casser ce bloc hors assaut !"
+  #Define message sent when player break block who restricted outside assault."
+  block-break-outside-assault: "&cVous ne pouvez pas casser ce bloc hors assaut !"
   #Define message sent when player trying to sent command who restricted in assault.
   commands-restricted-in-assault: "&cVous ne pouvez executer cette commande en assaut !"
-  #Define message sent when player trying to sent command who restricted excluding assault.
-  commands-restricted-excluding-assault: "&cVous ne pouvez pas executer cette commande hors assaut !"
+  #Define message sent when player trying to sent command who restricted outside assault.
+  commands-restricted-outside-assault: "&cVous ne pouvez pas executer cette commande hors assaut !"
   #Define message sent when player trying to disband faction, but this faction is in assault.
   you_cant_disband: "&cVous ne pouvez pas disband votre faction car elle est en assaut !"
   #Define message sent when player trying to assault other faction, but his faction or enemy faction has not enought days of creation.
@@ -240,6 +247,10 @@ messages:
   disconnect_kill_count_pf: "&cLa déconnexion de l'un des membres de votre assaut à donné des points à votre ennemi."
   #Define message sent when enemy player disconnect, and kill is count for you'r faction.
   disconnect_kill_count: "&aLa déconnexion de l'un des membres adverse vous à donné des points de kill."
+  #Define message sent when player try to hit another player in the player faction territory, but this is not in assault.
+  cant_hit_outside_assault: "&cVous ne pouvez pas frapper un joueur dans sa faction hors assaut !"
+  #Define message sent when player try to hit another player in assault, but damaged and damager are not in the same assault.
+  cant_hit_player_of_another_assault: "&cVous ne pouvez pas frapper un joueur étant dans un autre assaut que le votre !"
 #==================Server Settings========================#
 #=================DO NOT TOUCH IT !=======================#
 

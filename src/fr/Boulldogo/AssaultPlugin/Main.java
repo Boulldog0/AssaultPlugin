@@ -22,6 +22,7 @@ import com.massivecraft.factions.Factions;
 import fr.Boulldogo.AssaultPlugin.Commands.AssaultCommand;
 import fr.Boulldogo.AssaultPlugin.Listeners.AssaultListener;
 import fr.Boulldogo.AssaultPlugin.Listeners.InteractListener;
+import fr.Boulldogo.AssaultPlugin.Listeners.PlayerListener;
 import fr.Boulldogo.AssaultPlugin.Utils.GithubVersion;
 import fr.Boulldogo.AssaultPlugin.Utils.YamlUpdater;
 
@@ -60,7 +61,7 @@ public class Main extends JavaPlugin {
 		YamlUpdater updater = new YamlUpdater(this);
 		updater.updateYamlFiles(new String[] {"config.yml"});
 		
-		String version = "1.2.1";
+		String version = "1.2.3";
 		Main.V = version;
 		
         GithubVersion versionChecker = new GithubVersion(this, version, "https://api.github.com/repos/Boulldog0/AssaultPlugin/releases/latest");
@@ -72,11 +73,12 @@ public class Main extends JavaPlugin {
 		this.getCommand("assault").setExecutor(new AssaultCommand(this));
 		this.getServer().getPluginManager().registerEvents(new AssaultListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new InteractListener(this), this);
-		this.getLogger().info("Plugin assault version 1.2.1 by Boulldogo loaded with success !");
+		this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+		this.getLogger().info("Plugin assault version 1.2.3 by Boulldogo loaded with success !");
 	}
 	
 	public void onDisable() {
-		this.getLogger().info("Plugin assault version 1.2.1 by Boulldogo unloaded with success !");
+		this.getLogger().info("Plugin assault version 1.2.3 by Boulldogo unloaded with success !");
 	}
 	
 	public void startCooldownVerification() {

@@ -62,7 +62,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command arg1, String arg2, String[] args) {
-        if (!(sender instanceof Player)) {
+        if(!(sender instanceof Player)) {
             plugin.getLogger().info("Only players can use that command!");
             return true;
         }
@@ -70,14 +70,14 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
         String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
         Player player = (Player) sender;
 
-        if (args.length < 1) {
+        if(args.length < 1) {
             player.sendMessage(prefix + ChatColor.RED + "Please give correct argument. Type /assault help for more help.");
             return true;
         }
 
         String subCommand = args[0];
 
-        if (subCommand.equals("help")) {
+        if(subCommand.equals("help")) {
             player.sendMessage(translateString(plugin.getConfig().getString("help_header")));
             player.sendMessage(translateString(plugin.getConfig().getString("help_1")));
             player.sendMessage(translateString(plugin.getConfig().getString("help_2")));
@@ -88,7 +88,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
             player.sendMessage(translateString(plugin.getConfig().getString("help_7")));
             player.sendMessage(translateString(plugin.getConfig().getString("help_footer")));
             return true;
-        } else if (subCommand.equals("list")) {
+        } else if(subCommand.equals("list")) {
             if(attackAssaultList.size() > 0) {
                 for (int z = 0; z < attackAssaultList.size(); z++) {
                     Faction attackFac = attackAssaultList.get(z);
@@ -102,32 +102,32 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
                 player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.assault_list_any_assault")));
             }
             return true;
-        } else if (subCommand.equals("admin")) {
-            if (!player.hasPermission("assault.admin")) {
+        } else if(subCommand.equals("admin")) {
+            if(!player.hasPermission("assault.admin")) {
                 player.sendMessage(prefix + translateString(plugin.getConfig().getString("no-permission")));
                 return true;
             }
 
-            if (args.length < 2) {
+            if(args.length < 2) {
                 player.sendMessage(prefix + ChatColor.RED + "Admin arguments: /assault admin <stop/resetcd/modifyelo> <args>");
                 return true;
             }
 
             String command = args[1];
-            if (command.equals("stop")) {
-                if (args.length < 3) {
+            if(command.equals("stop")) {
+                if(args.length < 3) {
                     player.sendMessage(prefix + ChatColor.RED + "Correct arguments: /assault admin stop <faction>");
                     return true;
                 }
 
                 String facName = args[2];
                 Faction faction = Factions.getInstance().getByTag(facName);
-                if (faction == null || faction.isWilderness()) {
+                if(faction == null || faction.isWilderness()) {
                     player.sendMessage(prefix + ChatColor.RED + "You cannot stop a wilderness assault!");
                     return true;
                 }
 
-                if (!attackAssaultList.contains(faction) && !defenseAssaultList.contains(faction)) {
+                if(!attackAssaultList.contains(faction) && !defenseAssaultList.contains(faction)) {
                     player.sendMessage(prefix + ChatColor.RED + "This faction is not in assault!");
                     return true;
                 }
@@ -137,27 +137,27 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
 
                 stopAssault(finalStopFaction);
                 player.sendMessage(prefix + ChatColor.GREEN + "Assault stopped for faction " + faction.getTag() + "!");
-            } else if (command.equals("resetcd")) {
-                if (args.length < 4) {
+            } else if(command.equals("resetcd")) {
+                if(args.length < 4) {
                     player.sendMessage(prefix + ChatColor.RED + "Correct arguments: /assault admin resetcd <faction> <faction_assault_to_reset>");
                     return true;
                 }
 
                 String facName = args[2];
                 Faction faction = Factions.getInstance().getByTag(facName);
-                if (faction == null || faction.isWilderness()) {
+                if(faction == null || faction.isWilderness()) {
                     player.sendMessage(prefix + ChatColor.RED + "You cannot reset assault cooldown for a wilderness faction!");
                     return true;
                 }
 
                 String aFacName = args[3];
                 Faction aFaction = Factions.getInstance().getByTag(aFacName);
-                if (aFaction == null || aFaction.isWilderness()) {
+                if(aFaction == null || aFaction.isWilderness()) {
                     player.sendMessage(prefix + ChatColor.RED + "You cannot reset assault cooldown for a wilderness faction!");
                     return true;
                 }
 
-                if (!plugin.getConfig().contains("cooldowns." + facName + "." + aFacName)) {
+                if(!plugin.getConfig().contains("cooldowns." + facName + "." + aFacName)) {
                     player.sendMessage(prefix + ChatColor.RED + "This faction doesn't have cooldown for faction " + aFacName + "!");
                     return true;
                 }
@@ -168,14 +168,14 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
                 faction.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.reset_cooldown_for_faction").replace("%f", aFacName).replace("%s", player.getName()))));
                 player.sendMessage(prefix + "Cooldown of faction " + facName + " for assault faction " + aFacName + " successfully reset!");
             } else if(command.equals("modifyelo")) {
-                if (args.length < 5) {
+                if(args.length < 5) {
                     player.sendMessage(prefix + ChatColor.RED + "Correct arguments: /assault admin modifyelo <faction> <add/remove> <win/loose/points> <value>");
                     return true;
                 }
 
                 String facName = args[2];
                 Faction faction = Factions.getInstance().getByTag(facName);
-                if (faction == null || faction.isWilderness()) {
+                if(faction == null || faction.isWilderness()) {
                     player.sendMessage(prefix + ChatColor.RED + "You cannot reset assault cooldown for a wilderness faction!");
                     return true;
                 }
@@ -229,14 +229,14 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
                 }
                 
             } 
-        } else if (subCommand.equals("ranking")) {
+        } else if(subCommand.equals("ranking")) {
             String header = translateString(plugin.getConfig().getString("ranking_header"));
             String lineTemplate = translateString(plugin.getConfig().getString("ranking_lines"));
             String footer = translateString(plugin.getConfig().getString("ranking_footer"));
             int maxEntries = plugin.getConfig().getInt("ranking_entries", 10);
 
             ConfigurationSection rankingSection = plugin.getConfig().getConfigurationSection("ranking");
-            if (rankingSection == null) {
+            if(rankingSection == null) {
                 sender.sendMessage(ChatColor.RED + "Aucune donnée de ranking trouvée.");
                 return true;
             }
@@ -269,69 +269,69 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
 
             sender.sendMessage(rankingMessage.toString());
             return true;
-        } else if (subCommand.equals("join") || subCommand.equals("accept")) {
-            if (args.length < 2) {
+        } else if(subCommand.equals("join") || subCommand.equals("accept")) {
+            if(args.length < 2) {
                 player.sendMessage(prefix + ChatColor.RED + "Correct arguments: /assault join <faction>");
                 return true;
             }
 
-            if (!subCommand.equals("accept")) {
+            if(!subCommand.equals("accept")) {
                 String facName = args[1];
 
                 Faction faction = Factions.getInstance().getBestTagMatch(facName);
-                if (faction == null || faction.isWilderness()) {
+                if(faction == null || faction.isWilderness()) {
                     player.sendMessage(prefix + ChatColor.RED + translateString(plugin.getConfig().getString("messages.this_faction_dosnt_exists")));
                     return true;
                 }
 
                 Faction playerFac = FPlayers.getInstance().getByPlayer(player).getFaction();
 
-                if (playerFac.isWilderness()) {
+                if(playerFac.isWilderness()) {
                     player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.cannot_assault_in_wilderness")));
                     return true;
                 }
 
                 Role playerRole = FPlayers.getInstance().getByPlayer(player).getRole();
                 Role role = Role.fromString(plugin.getConfig().getString("minimum_role_allowed_for_join_assault"));
-                if (!isRoleValid(playerRole, role)) {
+                if(!isRoleValid(playerRole, role)) {
                     player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_havnt_good_role")));
                     return true;
                 }
 
                 Relation relation = playerFac.getRelationTo(faction);
 
-                if (relation != Relation.ALLY) {
+                if(relation != Relation.ALLY) {
                     player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_must_be_ally_with_this_faction")));
                     return true;
                 }
 
-                if (attackAssaultList.contains(playerFac) || defenseAssaultList.contains(playerFac)) {
+                if(attackAssaultList.contains(playerFac) || defenseAssaultList.contains(playerFac)) {
                     player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_cant_join_assaut_if_you_are_in_assault")));
                     return true;
                 }
 
-                if (attackJoinList.contains(playerFac) || defenseJoinList.contains(playerFac)) {
+                if(attackJoinList.contains(playerFac) || defenseJoinList.contains(playerFac)) {
                     player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_cant_join_assaut_if_you_are_in_assault")));
                     return true;
                 }
 
-                if (plugin.getConfig().getStringList("assault.waiting_join.attack." + faction.getTag()).contains(playerFac.getTag())) {
+                if(plugin.getConfig().getStringList("assault.waiting_join.attack." + faction.getTag()).contains(playerFac.getTag())) {
                     player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.already_sent_request")));
                     return true;
                 }
 
                 List<String> list;
-                if (attackAssaultList.contains(faction)) {
+                if(attackAssaultList.contains(faction)) {
                     list = plugin.getConfig().getStringList("assault.waiting_join.attack." + faction.getTag());
-                    if (!list.contains(playerFac.getTag())) {
+                    if(!list.contains(playerFac.getTag())) {
                         list.add(playerFac.getTag());
                         plugin.getConfig().set("assault.waiting_join.attack." + faction.getTag(), list);
                         plugin.saveConfig();
                         Bukkit.broadcastMessage(prefix + translateString(plugin.getConfig().getString("messages.faction_request_join_assault").replace("%f", faction.getTag()).replace("%pf", playerFac.getTag())));
                     }
-                } else if (defenseAssaultList.contains(faction)) {
+                } else if(defenseAssaultList.contains(faction)) {
                     list = plugin.getConfig().getStringList("assault.waiting_join.defense." + faction.getTag());
-                    if (!list.contains(playerFac.getTag())) {
+                    if(!list.contains(playerFac.getTag())) {
                         list.add(playerFac.getTag());
                         plugin.getConfig().set("assault.waiting_join.defense." + faction.getTag(), list);
                         plugin.saveConfig();
@@ -342,7 +342,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
             } else {
-                if (args.length < 2) {
+                if(args.length < 2) {
                     player.sendMessage(prefix + ChatColor.RED + "Correct arguments: /assault accept <faction>");
                     return true;
                 }
@@ -350,41 +350,41 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
                 String facName = args[1];
 
                 Faction faction = Factions.getInstance().getBestTagMatch(facName);
-                if (faction == null || faction.isWilderness()) {
+                if(faction == null || faction.isWilderness()) {
                     player.sendMessage(prefix + ChatColor.RED + translateString(plugin.getConfig().getString("messages.this_faction_dosnt_exists")));
                     return true;
                 }
 
                 Faction playerFac = FPlayers.getInstance().getByPlayer(player).getFaction();
 
-                if (playerFac.isWilderness()) {
+                if(playerFac.isWilderness()) {
                     player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.cannot_assault_in_wilderness")));
                     return true;
                 }
 
                 Role playerRole = FPlayers.getInstance().getByPlayer(player).getRole();
                 Role role = Role.fromString(plugin.getConfig().getString("minimum_role_allowed_for_join_assault"));
-                if (!isRoleValid(playerRole, role)) {
+                if(!isRoleValid(playerRole, role)) {
                     player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_havnt_good_role")));
                     return true;
                 }
 
                 Relation relation = playerFac.getRelationTo(faction);
 
-                if (relation != Relation.ALLY) {
+                if(relation != Relation.ALLY) {
                     player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_must_be_ally_with_this_faction")));
                     return true;
                 }
 
                 String side = (attackAssaultList.contains(playerFac) ? "attack" : "defense");
 
-                if (!plugin.getConfig().getStringList("assault.waiting_join." + side + "." + playerFac.getTag()).contains(faction.getTag())) {
+                if(!plugin.getConfig().getStringList("assault.waiting_join." + side + "." + playerFac.getTag()).contains(faction.getTag())) {
                     player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.this_facion_are_not_request_join_assault")));
                     return true;
                 }
 
                 List<String> joinList = plugin.getConfig().getStringList("assault.join." + side + "." + playerFac.getTag());
-                if (joinList.isEmpty() || !joinList.isEmpty() && !joinList.contains(faction.getTag())) {
+                if(joinList.isEmpty() || !joinList.isEmpty() && !joinList.contains(faction.getTag())) {
                     joinList.add(faction.getTag());
                     plugin.getConfig().set("assault.join." + side + "." + playerFac.getTag(), joinList);
                     plugin.saveConfig();
@@ -405,7 +405,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
             Player targetPlayer = Bukkit.getPlayer(targetName);
             Faction faction;
             
-            if (targetPlayer == null || !targetPlayer.isOnline()) {
+            if(targetPlayer == null || !targetPlayer.isOnline()) {
                 faction = Factions.getInstance().getBestTagMatch(targetName);
             } else {
                 faction = FPlayers.getInstance().getByPlayer(targetPlayer).getFaction();
@@ -413,12 +413,12 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
 
             Faction playerFac = FPlayers.getInstance().getByPlayer(player).getFaction();
             
-            if (faction == null || faction.isWilderness() || faction.isWarZone()) {
+            if(faction == null || faction.isWilderness() || faction.isWarZone()) {
                 player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.cannot_assault_staff_or_wild_faction")));
                 return true;
             }
 
-            if (playerFac.isWilderness()) {
+            if(playerFac.isWilderness()) {
                 player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.cannot_assault_in_wilderness")));
                 return true;
             }
@@ -426,39 +426,39 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
             int factionCount = faction.getOnlinePlayers().size();
             int playerFacCount = playerFac.getOnlinePlayers().size();
 
-            if (factionCount < plugin.getConfig().getInt("minimum_defense_faction_connected_count")) {
+            if(factionCount < plugin.getConfig().getInt("minimum_defense_faction_connected_count")) {
                 player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.not_enought_online_players")));
                 return true;
             }
             
             Role playerRole = FPlayers.getInstance().getByPlayer(player).getRole();
             Role role = Role.fromString(plugin.getConfig().getString("minimum_role_allowed_for_assault"));
-            if (!isRoleValid(playerRole, role)) {
+            if(!isRoleValid(playerRole, role)) {
                 player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_havnt_good_role")));
                 return true;
             }
 
-            if (playerFacCount < plugin.getConfig().getInt("minimum_attack_faction_connected_count")) {
+            if(playerFacCount < plugin.getConfig().getInt("minimum_attack_faction_connected_count")) {
                 player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.not_enought_online_players_in_your_faction")));
                 return true;
             }
 
-            if (attackAssaultList.contains(faction) || defenseAssaultList.contains(faction)) {
+            if(attackAssaultList.contains(faction) || defenseAssaultList.contains(faction)) {
                 player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_cant_assault_if_it_are_in_assault")));
                 return true;
             }
 
-            if (attackAssaultList.contains(playerFac) || defenseAssaultList.contains(playerFac)) {
+            if(attackAssaultList.contains(playerFac) || defenseAssaultList.contains(playerFac)) {
                 player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_cant_assault_if_you_are_in_assault")));
                 return true;
             }
             
-            if (attackJoinList.contains(playerFac) || defenseJoinList.contains(playerFac)) {
+            if(attackJoinList.contains(playerFac) || defenseJoinList.contains(playerFac)) {
                 player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_cant_assault_if_you_are_in_assault")));
                 return true;
             }
 
-            if (plugin.getConfig().contains("assault.cooldown." + playerFac.getTag() + "." + faction.getTag())) {
+            if(plugin.getConfig().contains("assault.cooldown." + playerFac.getTag() + "." + faction.getTag())) {
                 player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_have_cooldown_for_assault_this_faction")
                         .replace("%m", String.valueOf(plugin.getConfig().getInt("assault.cooldown." + playerFac.getTag() + "." + faction.getTag() + ".min")))
                         .replace("%s", String.valueOf(plugin.getConfig().getInt("assault.cooldown." + playerFac.getTag() + "." + faction.getTag() + ".sec")))));
@@ -467,20 +467,20 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
 
             Relation relation = playerFac.getRelationTo(faction);
 
-            if (relation != Relation.ENEMY) {
+            if(relation != Relation.ENEMY) {
                 player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you_cant_in_enemy_with_this_faction")
                         .replace("%m", String.valueOf(plugin.getConfig().getInt("assault.cooldown." + playerFac.getTag() + "." + faction.getTag() + ".min")))
                         .replace("%s", String.valueOf(plugin.getConfig().getInt("assault.cooldown." + playerFac.getTag() + "." + faction.getTag() + ".sec")))));
                 return true;
             }
             
-            if (plugin.getConfig().contains("cooldowns." + playerFac.getTag() + "." + faction.getTag())) {
+            if(plugin.getConfig().contains("cooldowns." + playerFac.getTag() + "." + faction.getTag())) {
                 player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.they_are_cooldown_with_this_faction")
                         .replace("%m", String.valueOf(plugin.getConfig().getInt("cooldowns." + playerFac.getTag() + "." + faction.getTag())))));
                 return true;
             }
             
-            if (plugin.getConfig().getBoolean("use-countdown-of-non-assault")) {
+            if(plugin.getConfig().getBoolean("use-countdown-of-non-assault")) {
                 int dayWithoutAssault = plugin.getConfig().getInt("non-assault-countdown");
 
                 long attackCreationTime = playerFac.getFoundedDate();
@@ -498,7 +498,12 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
                 long daysSinceAttackCreation = ChronoUnit.DAYS.between(attackCreationDate, currentDate);
                 long daysSinceDefenseCreation = ChronoUnit.DAYS.between(defenseCreationDate, currentDate);
 
-                if (daysSinceAttackCreation < dayWithoutAssault || daysSinceDefenseCreation < dayWithoutAssault || daysSinceDefenseCreation < dayWithoutAssault && daysSinceAttackCreation < dayWithoutAssault) {
+                if(daysSinceDefenseCreation < dayWithoutAssault) {
+                	player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.assault_non_agression_countdown")));
+                	return true;
+                } 
+                
+                if(daysSinceAttackCreation < dayWithoutAssault) {
                 	player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.assault_non_agression_countdown")));
                 	return true;
                 } 
@@ -513,7 +518,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
             attackAssaultList.add(playerFac);
             defenseAssaultList.add(faction);
             
-            if (plugin.getConfig().getBoolean("play_sound")) {
+            if(plugin.getConfig().getBoolean("play_sound")) {
                 playerFac.getOnlinePlayers().forEach(member -> member.playSound(member.getLocation(), Sound.valueOf(plugin.getConfig().getString("played_sound")), 4.0F, 4.0F));
                 faction.getOnlinePlayers().forEach(member -> member.playSound(member.getLocation(), Sound.valueOf(plugin.getConfig().getString("played_sound")), 4.0F, 4.0F));
             }
@@ -549,7 +554,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
             plugin.getConfig().set("cooldowns." + playerFac.getTag() + "." + faction.getTag(), cooldownTime);
             plugin.saveConfig();
 
-            if (plugin.getConfig().getBoolean("enable_assault_scoreboard")) {
+            if(plugin.getConfig().getBoolean("enable_assault_scoreboard")) {
                 createScoreboard(playerFac, faction);
             }
 
@@ -571,8 +576,8 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
             completions.add("join");
             completions.add("accept");
             completions = getSortedCompletions(completions, args[0]);
-        } else if (args[0].equals("admin")) {
-            if (args.length == 2) {
+        } else if(args[0].equals("admin")) {
+            if(args.length == 2) {
                 completions.add("stop");
                 completions.add("resetcd");
                 completions = getSortedCompletions(completions, args[1]);
@@ -601,7 +606,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
                 
                 if(s1StartsWith && !s2StartsWith) {
                     return -1;
-                } else if (!s1StartsWith && s2StartsWith) {
+                } else if(!s1StartsWith && s2StartsWith) {
                     return 1;
                 } else {
                     return s1.compareToIgnoreCase(s2);
@@ -614,7 +619,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
     private List<String> getFactionNames() {
         List<String> factionNames = new ArrayList<>();
         for (Faction faction : Factions.getInstance().getAllFactions()) {
-            if (!faction.isWilderness() && !faction.isWarZone()) {
+            if(!faction.isWilderness() && !faction.isWarZone()) {
                 factionNames.add(faction.getTag());
             }
         }
@@ -771,10 +776,10 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
                         int minutes = plugin.getConfig().getInt("assault.time_roaming." + facTag + ".min");
                         int seconds = plugin.getConfig().getInt("assault.time_roaming." + facTag + ".sec");
 
-                        if (seconds >= 5) {
+                        if(seconds >= 5) {
                             seconds -= 5;
                         } else {
-                            if (minutes > 0) {
+                            if(minutes > 0) {
                                 minutes -= 1;
                                 seconds = 55 + seconds;
                             }
@@ -794,14 +799,14 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
                         int minutes = plugin.getConfig().getInt("assault.time_roaming." + facTag + ".min");
                         int seconds = plugin.getConfig().getInt("assault.time_roaming." + facTag + ".sec");
                         
-                        if (seconds >= 5) {
+                        if(seconds >= 5) {
                             seconds -= 5;
                         } else {
-                            if (minutes > 0) {
+                            if(minutes > 0) {
                                 minutes -= 1;
                                 seconds = 55 + seconds;
                             } else {
-                                if (seconds == 0) {
+                                if(seconds == 0) {
                                     stopAssault(faction);
                                     continue;
                                 }
@@ -845,7 +850,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
         int winnerScore = (winner == faction) ? factionScore : playerFacScore;
         int looserScore = (winner == faction) ? playerFacScore : factionScore;
 
-        if (playerFacScore > factionScore || factionScore > playerFacScore) {
+        if(playerFacScore > factionScore || factionScore > playerFacScore) {
             Bukkit.broadcastMessage(prefix + translateString(plugin.getConfig().getString("messages.assault_win").replace("%w", winner.getTag()).replace("%l", looser.getTag()).replace("%e", String.valueOf(pointToGive)).replace("%pw", String.valueOf(winnerScore)).replace("%pl", String.valueOf(looserScore))));
             
             if(plugin.getConfig().contains("ranking." + winner.getTag())) {
@@ -935,14 +940,14 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
 
         for (Player player : playerFac.getOnlinePlayers()) {
             Scoreboard board = player.getScoreboard();
-            if (board != null) {
+            if(board != null) {
                 board.clearSlot(DisplaySlot.SIDEBAR);
             }
         }
 
         for (Player player : faction.getOnlinePlayers()) {
             Scoreboard board = player.getScoreboard();
-            if (board != null) {
+            if(board != null) {
                 board.clearSlot(DisplaySlot.SIDEBAR);
             }
         }
@@ -955,7 +960,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
             	Faction fact = Factions.getInstance().getByTag(attackJoinFac.get(i));
             	for(Player player : fact.getOnlinePlayers()) {
                     Scoreboard board = player.getScoreboard();
-                    if (board != null) {
+                    if(board != null) {
                         board.clearSlot(DisplaySlot.SIDEBAR);
                     }
             	}
@@ -967,7 +972,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
             	Faction fact = Factions.getInstance().getByTag(defenseJoinFac.get(i));
             	for(Player player : fact.getOnlinePlayers()) {
                     Scoreboard board = player.getScoreboard();
-                    if (board != null) {
+                    if(board != null) {
                         board.clearSlot(DisplaySlot.SIDEBAR);
                     }
             	}
@@ -990,7 +995,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
 
             int index = defenseAssaultList.lastIndexOf(faction);
 
-            if (index != -1) {
+            if(index != -1) {
                 AssaultListener.attackScoreList.remove(index);
                 AssaultListener.defenseScoreList.remove(index);
                 attackAssaultList.remove(playerFac);
@@ -1057,13 +1062,13 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
     private void updatePlayerScoreboards(Faction faction, int index, String attackS, String defenseS, String scoreKey, String scoreValue, String allyKey, String eAllyKey, String facTag) {
         for (Player player : faction.getOnlinePlayers()) {
             Scoreboard board = player.getScoreboard();
-            if (board == null) continue;
+            if(board == null) continue;
 
             Objective objective = board.getObjective("assault");
-            if (objective == null) continue;
+            if(objective == null) continue;
 
             for (String entry : board.getEntries()) {
-                if (entry.startsWith(attackS) || entry.startsWith(defenseS) || entry.startsWith(scoreKey) || entry.startsWith(allyKey) || entry.startsWith(eAllyKey)) {
+                if(entry.startsWith(attackS) || entry.startsWith(defenseS) || entry.startsWith(scoreKey) || entry.startsWith(allyKey) || entry.startsWith(eAllyKey)) {
                     board.resetScores(entry);
                 }
             }
@@ -1077,7 +1082,7 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
     }
 
     private void updateFactionAllies(String configPath, int index, String attackS, String defenseS, String scoreKey, String scoreValue, String allyKey, String eAllyKey, String facTag) {
-        if (plugin.getConfig().contains(configPath)) {
+        if(plugin.getConfig().contains(configPath)) {
             List<String> facName = plugin.getConfig().getStringList(configPath);
             for (String name : facName) {
                 Faction faction = Factions.getInstance().getByTag(name);

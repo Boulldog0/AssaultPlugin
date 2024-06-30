@@ -1,6 +1,9 @@
 package fr.Boulldogo.AssaultPlugin.API;
 
+import com.massivecraft.factions.Faction;
+
 import fr.Boulldogo.AssaultPlugin.Main;
+import fr.Boulldogo.AssaultPlugin.Commands.AssaultCommand;
 
 public class AssaultAPI {
     
@@ -77,5 +80,39 @@ public class AssaultAPI {
     public void removeFaction(String facName) {
         plugin.getConfig().set("ranking." + facName, null);
         plugin.saveConfig();
+    }
+    
+    public boolean isInAssault(Faction faction) {
+    	if(AssaultCommand.attackAssaultList.isEmpty()) return false;
+    	return AssaultCommand.attackAssaultList.contains(faction)
+    		|| AssaultCommand.defenseAssaultList.contains(faction)
+    		|| AssaultCommand.attackJoinList.contains(faction)
+    		|| AssaultCommand.defenseJoinList.contains(faction);
+    }
+    
+    public boolean isDirectAssaultFaction(Faction faction) {
+    	if(AssaultCommand.attackAssaultList.isEmpty()) return false;
+    	return AssaultCommand.attackAssaultList.contains(faction)
+    		|| AssaultCommand.defenseAssaultList.contains(faction);
+    }
+    
+    public boolean isTheSameAssault(Faction faction, Faction faction2) {
+    	if(AssaultCommand.attackAssaultList.isEmpty()) return false;
+    	if(!isDirectAssaultFaction(faction)) return false;
+    	if(!isDirectAssaultFaction(faction2)) return false;
+    	boolean isAttack = AssaultCommand.attackAssaultList.contains(faction);
+    	
+    	int index = 0;
+    	if(isAttack) {
+    		index = AssaultCommand.attackAssaultList.lastIndexOf(faction);
+    	} else {
+    		index = AssaultCommand.defenseAssaultList.lastIndexOf(faction);
+    	}
+    	
+    	if(isAttack) {
+    		return AssaultCommand.defenseAssaultList.get(index) == faction2;
+    	} else {
+    		return AssaultCommand.attackAssaultList.get(index) == faction2;
+    	}
     }
 }
