@@ -332,8 +332,8 @@ public class AssaultListener implements Listener {
                 int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
                 defenseScoreList.set(index, defenseScoreList.get(index) + scoreToAdd);
                 Faction faction = AssaultCommand.defenseAssaultList.get(index);
-                playerFac.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count_pf")));
-                faction.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count")));
+                playerFac.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count_pf"))));
+                faction.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count"))));
                 KillInAssaultEvent killEvent = new KillInAssaultEvent(player, scoreToAdd, playerFac, faction);
                 Bukkit.getServer().getPluginManager().callEvent(killEvent);
                 
@@ -343,23 +343,23 @@ public class AssaultListener implements Listener {
                 if(!attackJoin.isEmpty()) {
                 	for(int i = 0; i < attackJoin.size(); i++) {
                 		Faction f = Factions.getInstance().getByTag(attackJoin.get(i));
-                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count_pf")));
+                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count_pf"))));
                 	}
                 }
                 
                 if(!defenseJoin.isEmpty()) {
                 	for(int i = 0; i < attackJoin.size(); i++) {
                 		Faction f = Factions.getInstance().getByTag(defenseJoin.get(i));
-                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count")));
+                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count"))));
                 	}
                 }
     		} else if(AssaultCommand.defenseAssaultList.contains(playerFac)) {
                 index = AssaultCommand.defenseAssaultList.indexOf(playerFac);
                 int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
-                defenseScoreList.set(index, attackScoreList.get(index) + scoreToAdd);
+                attackScoreList.set(index, attackScoreList.get(index) + scoreToAdd);
                 Faction faction = AssaultCommand.attackAssaultList.get(index);
-                playerFac.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count_pf")));
-                faction.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count")));
+                playerFac.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count_pf"))));
+                faction.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count"))));
                 KillInAssaultEvent killEvent = new KillInAssaultEvent(player, scoreToAdd, playerFac, faction);
                 Bukkit.getServer().getPluginManager().callEvent(killEvent);
                 
@@ -369,14 +369,14 @@ public class AssaultListener implements Listener {
                 if(!attackJoin.isEmpty()) {
                 	for(int i = 0; i < attackJoin.size(); i++) {
                 		Faction f = Factions.getInstance().getByTag(attackJoin.get(i));
-                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count")));
+                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count"))));
                 	}
                 }
                 
                 if(!defenseJoin.isEmpty()) {
                 	for(int i = 0; i < attackJoin.size(); i++) {
                 		Faction f = Factions.getInstance().getByTag(defenseJoin.get(i));
-                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count_pf")));
+                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count_pf"))));
                 	}
                 }
     		} else {
@@ -392,10 +392,10 @@ public class AssaultListener implements Listener {
 				}
 				Faction pFac = AssaultCommand.attackAssaultList.get(index);
                 int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
-                defenseScoreList.set(index, attackScoreList.get(index) + scoreToAdd);
+                defenseScoreList.set(index, defenseScoreList.get(index) + scoreToAdd);
                 Faction faction = AssaultCommand.defenseAssaultList.get(index);
-                pFac.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count_pf")));
-                faction.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count")));
+                pFac.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count_pf"))));
+                faction.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count"))));
                 KillInAssaultEvent killEvent = new KillInAssaultEvent(player, scoreToAdd, pFac, faction);
                 Bukkit.getServer().getPluginManager().callEvent(killEvent);
                 
@@ -405,14 +405,14 @@ public class AssaultListener implements Listener {
                 if(!attackJoin.isEmpty()) {
                 	for(int i = 0; i < attackJoin.size(); i++) {
                 		Faction f = Factions.getInstance().getByTag(attackJoin.get(i));
-                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count_pf")));
+                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count_pf"))));
                 	}
                 }
                 
                 if(!defenseJoin.isEmpty()) {
                 	for(int i = 0; i < attackJoin.size(); i++) {
                 		Faction f = Factions.getInstance().getByTag(defenseJoin.get(i));
-                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count")));
+                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count"))));
                 	}
                 }
         	} else if(AssaultCommand.defenseJoinList.contains(playerFac)) {
@@ -424,10 +424,10 @@ public class AssaultListener implements Listener {
 				}
 				Faction pFac = AssaultCommand.defenseAssaultList.get(index);
                 int scoreToAdd = plugin.getConfig().getInt("point-per-kill");
-                defenseScoreList.set(index, attackScoreList.get(index) + scoreToAdd);
+                attackScoreList.set(index, attackScoreList.get(index) + scoreToAdd);
                 Faction faction = AssaultCommand.attackAssaultList.get(index);
-                pFac.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count_pf")));
-                faction.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count")));
+                pFac.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count_pf"))));
+                faction.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count"))));
                 KillInAssaultEvent killEvent = new KillInAssaultEvent(player, scoreToAdd, pFac, faction);
                 Bukkit.getServer().getPluginManager().callEvent(killEvent);
                 
@@ -437,14 +437,14 @@ public class AssaultListener implements Listener {
                 if(!attackJoin.isEmpty()) {
                 	for(int i = 0; i < attackJoin.size(); i++) {
                 		Faction f = Factions.getInstance().getByTag(attackJoin.get(i));
-                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count")));
+                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count"))));
                 	}
                 }
                 
                 if(!defenseJoin.isEmpty()) {
                 	for(int i = 0; i < attackJoin.size(); i++) {
                 		Faction f = Factions.getInstance().getByTag(defenseJoin.get(i));
-                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString("messages.disconnect_kill_count_pf")));
+                		f.getOnlinePlayers().forEach(member -> member.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.disconnect_kill_count_pf"))));
                 	}
                 }
         	 } else {
