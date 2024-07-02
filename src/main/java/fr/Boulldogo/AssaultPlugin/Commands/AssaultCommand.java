@@ -656,7 +656,8 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         Scoreboard board = manager.getNewScoreboard();
 
-        Objective objective = board.registerNewObjective("assault", "dummy");
+        @SuppressWarnings("deprecation")
+		Objective objective = board.registerNewObjective("assault", "dummy");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         String displayName = ChatColor.RED + "⚔ Assault " + playerFac.getTag() + " VS " + faction.getTag() + " ⚔";
         if(displayName.length() <= 32) {
@@ -715,7 +716,8 @@ public class AssaultCommand implements CommandExecutor, TabCompleter {
             Faction playerFac = attackAssaultList.get(index);
             Faction faction = defenseAssaultList.get(index);
 
-        Objective objective = board.registerNewObjective("assault", "dummy");
+        @SuppressWarnings("deprecation")
+		Objective objective = board.registerNewObjective("assault", "dummy");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         String displayName = ChatColor.RED + "⚔ Assault " + playerFac.getTag() + " VS " + faction.getTag() + " ⚔";
         if(displayName.length() <= 32) {

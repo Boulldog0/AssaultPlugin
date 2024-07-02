@@ -702,7 +702,8 @@ public class AssaultListener implements Listener {
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         Scoreboard board = manager.getNewScoreboard();
 
-        Objective objective = board.registerNewObjective("assault", "dummy");
+        @SuppressWarnings("deprecation")
+		Objective objective = board.registerNewObjective("assault", "dummy");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         String displayName = ChatColor.RED + "⚔ Assault " + attackFac.getTag() + " VS " + defenseFac.getTag() + " ⚔";
         if(displayName.length() <= 32) {

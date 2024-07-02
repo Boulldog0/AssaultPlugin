@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -51,6 +52,8 @@ public class Main extends JavaPlugin {
     		Bukkit.getServer().spigot().restart();
         }
         
+	    new Metrics(this, 22503);
+        
 		saveDefaultConfig();
 		mergeConfigDefaults();
 		
@@ -61,7 +64,7 @@ public class Main extends JavaPlugin {
 		YamlUpdater updater = new YamlUpdater(this);
 		updater.updateYamlFiles(new String[] {"config.yml"});
 		
-		String version = "1.2.3";
+		String version = "1.2.4";
 		Main.V = version;
 		
         GithubVersion versionChecker = new GithubVersion(this, version, "https://api.github.com/repos/Boulldog0/AssaultPlugin/releases/latest");
@@ -74,11 +77,11 @@ public class Main extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new AssaultListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new InteractListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
-		this.getLogger().info("Plugin assault version 1.2.3 by Boulldogo loaded with success !");
+		this.getLogger().info("Plugin assault version 1.2.4 by Boulldogo loaded with success !");
 	}
 	
 	public void onDisable() {
-		this.getLogger().info("Plugin assault version 1.2.3 by Boulldogo unloaded with success !");
+		this.getLogger().info("Plugin assault version 1.2.4 by Boulldogo unloaded with success !");
 	}
 	
 	public void startCooldownVerification() {

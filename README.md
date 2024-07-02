@@ -40,7 +40,11 @@ AssaultPlugin is a versatile plugin designed for factions servers, providing a c
 #### Requirements
 
 - **Faction Plugin:** [SaberFactions](https://github.com/SaberLLC/Saber-Factions)
-- **Plugin Version:** 1.7 à 1.20.6
+- **Plugin Version:** 1.7 à 1.21
+
+## 📈 Statistics bStats
+
+[![bStats Graph](https://bstats.org/signatures/bukkit/AssaultPlugin.svg)](https://bstats.org/plugin/bukkit/AssaultPlugin)
 
 #### Permissions
 
@@ -100,7 +104,11 @@ AssaultPlugin est un plugin polyvalent conçu pour les serveurs de factions, off
 #### Prérequis
 
 - **Plugin Faction :** [SaberFactions](https://github.com/SaberLLC/Saber-Factions)
-- **Version du Plugin :** 1.7 à 1.20.6
+- **Version du Plugin :** 1.7 à 1.21
+
+## 📈 Statistiques bStats
+
+[![bStats Graph](https://bstats.org/signatures/bukkit/AssaultPlugin.svg)](https://bstats.org/plugin/bukkit/AssaultPlugin)
 
 #### Permissions
 

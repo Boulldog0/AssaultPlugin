@@ -1,6 +1,7 @@
 package fr.Boulldogo.AssaultPlugin.Utils;
 
 import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -17,7 +18,8 @@ public class YamlUpdater {
     public YamlUpdater(Main plugin) {
         this.plugin = plugin;
 
-        this.yamlLoader = new Yaml(new Constructor());
+        LoaderOptions loaderOptions = new LoaderOptions();
+        this.yamlLoader = new Yaml(new Constructor(loaderOptions));
 
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -26,16 +28,16 @@ public class YamlUpdater {
 
     public void updateYamlFiles(String[] fileNames) {
         for(String fileName : fileNames) {
-            try{
+            try {
                 File dataFolderFile = new File(plugin.getDataFolder(), fileName);
 
-                if(!dataFolderFile.exists()) {
+                if (!dataFolderFile.exists()) {
                     plugin.getLogger().warning("[YAML-Updater] File not found in data folder: " + fileName);
                     continue;
                 }
 
                 try(InputStream defaultYamlStream = getClass().getResourceAsStream("/" + fileName)) {
-                    if(defaultYamlStream == null) {
+                    if (defaultYamlStream == null) {
                         plugin.getLogger().warning("[YAML-Updater] Default file not found in AssaultPlugin.jar: " + fileName);
                         continue;
                     }
