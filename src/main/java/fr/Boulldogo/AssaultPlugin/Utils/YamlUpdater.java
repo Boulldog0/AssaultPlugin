@@ -45,7 +45,7 @@ public class YamlUpdater {
                     Map<String, Object> defaultYamlMap = loadYaml(defaultYamlStream);
                     Map<String, Object> dataFolderYamlMap = loadYaml(new FileInputStream(dataFolderFile));
 
-                    boolean updated = addMissingEntries(defaultYamlMap, dataFolderYamlMap);
+                    boolean updated = updateEntries(defaultYamlMap, dataFolderYamlMap);
 
                     if(updated) {
                         saveYaml(dataFolderFile, dataFolderYamlMap);
@@ -66,8 +66,17 @@ public class YamlUpdater {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean addMissingEntries(Map<String, Object> source, Map<String, Object> target) {
+    private boolean updateEntries(Map<String, Object> source, Map<String, Object> target) {
         boolean updated = false;
+
+        Iterator<String> targetIterator = target.keySet().iterator();
+        while (targetIterator.hasNext()) {
+            String key = targetIterator.next();
+            if (!source.containsKey(key)) {
+                targetIterator.remove();
+                updated = true;
+            }
+        }
 
         for(String key : source.keySet()) {
             if(source.get(key) instanceof Map) {
@@ -77,7 +86,7 @@ public class YamlUpdater {
                 }
                 Map<String, Object> subSource = (Map<String, Object>) source.get(key);
                 Map<String, Object> subTarget = (Map<String, Object>) target.get(key);
-                boolean subUpdated = addMissingEntries(subSource, subTarget);
+                boolean subUpdated = updateEntries(subSource, subTarget);
                 if(subUpdated) {
                     updated = true;
                 }
@@ -96,10 +105,15 @@ public class YamlUpdater {
                                 updated = true;
                             }
                         }
+                    } else {
+                        if (!targetList.equals(sourceList)) {
+                            target.put(key, new ArrayList<Object>(sourceList));
+                            updated = true;
+                        }
                     }
                 }
             } else {
-                if(!target.containsKey(key)) {
+                if(!target.containsKey(key) || !target.get(key).equals(source.get(key))) {
                     target.put(key, source.get(key));
                     updated = true;
                 }

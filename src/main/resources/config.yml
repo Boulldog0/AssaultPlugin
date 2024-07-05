@@ -102,43 +102,35 @@ enable_assault_scoreboard: true
 
 #Add new line with numeric ID for restrict items in assault
 interaction-item-restricted-in-assault:
-  - LOG
-  - DIAMOND_SWORD
+  - STRUCTURE_BLOCK
 
 #Add new line with numeric ID for restrict items outside assault
 interaction-item-restricted-outside-assault:
-  - LOG
-  - DIAMOND_SWORD
+  - STRUCTURE_BLOCK
 
 #Add new line with numeric ID for rectrict block interact in assault
 interaction-block-restricted-in-assault:
-  - LOG
-  - DIAMOND_SWORD
+  - STRUCTURE_BLOCK
 
 #Add new line with numeric ID for rectrict block interact outside assault
 interaction-block-restricted-outside-assault:
-  - LOG
-  - DIAMOND_SWORD
+  - STRUCTURE_BLOCK
 
 #Add new line with numeric ID for rectrict block place in assault
 block-place-restricted-in-assault:
-  - LOG
-  - DIAMOND_SWORD
+  - STRUCTURE_BLOCK
 
 #Add new line with numeric ID for rectrict block place outside assault
 block-place-restricted-outside-assault:
-  - LOG
-  - DIAMOND_SWORD
+  - STRUCTURE_BLOCK
 
 #Add new line with numeric ID for rectrict block break in assault
 block-break-restricted-in-assault:
-  - LOG
-  - DIAMOND_SWORD
+  - STRUCTURE_BLOCK
 
 #Add new line with numeric ID for rectrict block break outside assault
 block-break-restricted-outside-assault:
-  - LOG
-  - DIAMOND_SWORD
+  - STRUCTURE_BLOCK
 
 #=================Messages Settings=======================#
 

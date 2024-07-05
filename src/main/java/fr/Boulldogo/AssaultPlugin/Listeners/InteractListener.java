@@ -32,24 +32,24 @@ public class InteractListener implements Listener {
         ItemStack stack = e.getItem();
         Block block = e.getClickedBlock();
 
-        if (stack != null) {
+        if(stack != null) {
             Material material = stack.getType();
 			String id = String.valueOf(material);
-            if (!player.hasPermission("assault.bypass-restricted.items_interact")) {
-                if (plugin.getConfig().getStringList("interaction-item-restricted-in-assault").contains(id)) {
+            if(!player.hasPermission("assault.bypass-restricted.items_interact")) {
+                if(plugin.getConfig().getStringList("interaction-item-restricted-in-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
-                    if (!faction.isWilderness()) {
-                        if (isInAssault(faction)) {
+                    if(!faction.isWilderness()) {
+                        if(isInAssault(faction)) {
                             e.setCancelled(true);
                             player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.restricted-item-in-assault")));
                         }
                     }
                 }
 
-                if (plugin.getConfig().getStringList("interaction-item-restricted-outside-assault").contains(id)) {
+                if(plugin.getConfig().getStringList("interaction-item-restricted-outside-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
-                    if (!faction.isWilderness()) {
-                        if (!isInAssault(faction)) {
+                    if(!faction.isWilderness()) {
+                        if(!isInAssault(faction)) {
                             e.setCancelled(true);
                             player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.restricted-item-outside-assault")));
                         }
@@ -58,24 +58,24 @@ public class InteractListener implements Listener {
             }
         }
 
-        if (block != null) {
+        if(block != null) {
             Material material = block.getType();
 			String id = String.valueOf(material);
-            if (!player.hasPermission("assault.bypass-restricted.block_interact")) {
-                if (plugin.getConfig().getStringList("interaction-block-restricted-in-assault").contains(id)) {
+            if(!player.hasPermission("assault.bypass-restricted.block_interact")) {
+                if(plugin.getConfig().getStringList("interaction-block-restricted-in-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
-                    if (!faction.isWilderness()) {
-                        if (isInAssault(faction)) {
+                    if(!faction.isWilderness()) {
+                        if(isInAssault(faction)) {
                             e.setCancelled(true);
                             player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.restricted-block-in-assault")));
                         }
                     }
                 }
 
-                if (plugin.getConfig().getStringList("interaction-block-restricted-outside-assault").contains(id)) {
+                if(plugin.getConfig().getStringList("interaction-block-restricted-outside-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
-                    if (!faction.isWilderness()) {
-                        if (!isInAssault(faction)) {
+                    if(!faction.isWilderness()) {
+                        if(!isInAssault(faction)) {
                             e.setCancelled(true);
                             player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.restricted-block-outside-assault")));
                         }
@@ -90,24 +90,24 @@ public class InteractListener implements Listener {
         String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
         Block block = e.getBlock();
         Player player = e.getPlayer();
-        if (block != null) {
+        if(block != null) {
             Material material = block.getType();
 			String id = String.valueOf(material);
-            if (!player.hasPermission("assault.bypass-restricted.block-place")) {
-                if (plugin.getConfig().getStringList("block-place-restricted-in-assault").contains(id)) {
+            if(!player.hasPermission("assault.bypass-restricted.block-place")) {
+                if(plugin.getConfig().getStringList("block-place-restricted-in-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
-                    if (!faction.isWilderness()) {
-                        if (isInAssault(faction)) {
+                    if(!faction.isWilderness()) {
+                        if(isInAssault(faction)) {
                             e.setCancelled(true);
                             player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.block-place-in-assault")));
                         }
                     }
                 }
 
-                if (plugin.getConfig().getStringList("block-place-restricted-outside-assault").contains(id)) {
+                if(plugin.getConfig().getStringList("block-place-restricted-outside-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
-                    if (!faction.isWilderness()) {
-                        if (!isInAssault(faction)) {
+                    if(!faction.isWilderness()) {
+                        if(!isInAssault(faction)) {
                             e.setCancelled(true);
                             player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.block-place-outside-assault")));
                         }
@@ -122,24 +122,24 @@ public class InteractListener implements Listener {
         String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
         Block block = e.getBlock();
         Player player = e.getPlayer();
-        if (block != null) {
+        if(block != null) {
             Material material = block.getType();
 			String id = String.valueOf(material);
-            if (!player.hasPermission("assault.bypass-restricted.block-break")) { 
-                if (plugin.getConfig().getStringList("block-break-restricted-in-assault").contains(id)) {
+            if(!player.hasPermission("assault.bypass-restricted.block-break")) { 
+                if(plugin.getConfig().getStringList("block-break-restricted-in-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
-                    if (!faction.isWilderness()) {
-                        if (isInAssault(faction)) {
+                    if(!faction.isWilderness()) {
+                        if(isInAssault(faction)) {
                             e.setCancelled(true);
                             player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.block-break-in-assault")));
                         }
                     }
                 }
 
-                if (plugin.getConfig().getStringList("block-break-restricted-outside-assault").contains(id)) {
+                if(plugin.getConfig().getStringList("block-break-restricted-outside-assault").contains(id)) {
                     Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
-                    if (!faction.isWilderness()) {
-                        if (!isInAssault(faction)) {
+                    if(!faction.isWilderness()) {
+                        if(!isInAssault(faction)) {
                             e.setCancelled(true);
                             player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.block-break-outside-assault")));
                         }
