@@ -90,6 +90,8 @@ disable-direct-enemy-system: false
 enable_anti_deconnexion_system: true
 #Define seconds before kill count when player disconnect in assault
 count_kill_after: 120
+#Define if you want to disable direct neutral system (if you disable it, when player execute /f neutral 'faction', a demand will sent in another faction instead of direct neutral the two factions.)
+disable-neutral-without-confirmation: true
 
 #=================Scoreboard Settings=======================#
 

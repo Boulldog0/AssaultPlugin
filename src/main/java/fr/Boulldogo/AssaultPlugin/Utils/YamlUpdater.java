@@ -1,10 +1,7 @@
 package fr.Boulldogo.AssaultPlugin.Utils;
 
 import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
-
 import fr.Boulldogo.AssaultPlugin.Main;
 
 import java.io.*;
@@ -17,9 +14,7 @@ public class YamlUpdater {
 
     public YamlUpdater(Main plugin) {
         this.plugin = plugin;
-
-        LoaderOptions loaderOptions = new LoaderOptions();
-        this.yamlLoader = new Yaml(new Constructor(loaderOptions));
+        this.yamlLoader = new Yaml();
 
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -31,13 +26,13 @@ public class YamlUpdater {
             try {
                 File dataFolderFile = new File(plugin.getDataFolder(), fileName);
 
-                if (!dataFolderFile.exists()) {
+                if(!dataFolderFile.exists()) {
                     plugin.getLogger().warning("[YAML-Updater] File not found in data folder: " + fileName);
                     continue;
                 }
 
                 try(InputStream defaultYamlStream = getClass().getResourceAsStream("/" + fileName)) {
-                    if (defaultYamlStream == null) {
+                    if(defaultYamlStream == null) {
                         plugin.getLogger().warning("[YAML-Updater] Default file not found in AssaultPlugin.jar: " + fileName);
                         continue;
                     }
@@ -45,7 +40,7 @@ public class YamlUpdater {
                     Map<String, Object> defaultYamlMap = loadYaml(defaultYamlStream);
                     Map<String, Object> dataFolderYamlMap = loadYaml(new FileInputStream(dataFolderFile));
 
-                    boolean updated = updateEntries(defaultYamlMap, dataFolderYamlMap);
+                    boolean updated = addMissingEntries(defaultYamlMap, dataFolderYamlMap);
 
                     if(updated) {
                         saveYaml(dataFolderFile, dataFolderYamlMap);
@@ -54,7 +49,7 @@ public class YamlUpdater {
                         plugin.getLogger().info("[YAML-Updater] All keys are present in: " + fileName);
                     }
                 }
-            } catch (IOException e) {
+            } catch(IOException e) {
                 plugin.getLogger().severe("[YAML-Updater] Error updating file: " + fileName);
                 e.printStackTrace();
             }
@@ -66,17 +61,8 @@ public class YamlUpdater {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean updateEntries(Map<String, Object> source, Map<String, Object> target) {
+    private boolean addMissingEntries(Map<String, Object> source, Map<String, Object> target) {
         boolean updated = false;
-
-        Iterator<String> targetIterator = target.keySet().iterator();
-        while (targetIterator.hasNext()) {
-            String key = targetIterator.next();
-            if (!source.containsKey(key)) {
-                targetIterator.remove();
-                updated = true;
-            }
-        }
 
         for(String key : source.keySet()) {
             if(source.get(key) instanceof Map) {
@@ -84,9 +70,9 @@ public class YamlUpdater {
                     target.put(key, new HashMap<String, Object>());
                     updated = true;
                 }
-                Map<String, Object> subSource = (Map<String, Object>) source.get(key);
-                Map<String, Object> subTarget = (Map<String, Object>) target.get(key);
-                boolean subUpdated = updateEntries(subSource, subTarget);
+                Map<String, Object> subSource =(Map<String, Object>) source.get(key);
+                Map<String, Object> subTarget =(Map<String, Object>) target.get(key);
+                boolean subUpdated = addMissingEntries(subSource, subTarget);
                 if(subUpdated) {
                     updated = true;
                 }
@@ -95,8 +81,8 @@ public class YamlUpdater {
                     target.put(key, new ArrayList<Object>((List<Object>) source.get(key)));
                     updated = true;
                 } else {
-                    List<Object> sourceList = (List<Object>) source.get(key);
-                    List<Object> targetList = (List<Object>) target.get(key);
+                    List<Object> sourceList =(List<Object>) source.get(key);
+                    List<Object> targetList =(List<Object>) target.get(key);
 
                     if(!isStringList(sourceList)) {
                         for(Object item : sourceList) {
@@ -105,15 +91,10 @@ public class YamlUpdater {
                                 updated = true;
                             }
                         }
-                    } else {
-                        if (!targetList.equals(sourceList)) {
-                            target.put(key, new ArrayList<Object>(sourceList));
-                            updated = true;
-                        }
                     }
                 }
             } else {
-                if(!target.containsKey(key) || !target.get(key).equals(source.get(key))) {
+                if(!target.containsKey(key)) {
                     target.put(key, source.get(key));
                     updated = true;
                 }
