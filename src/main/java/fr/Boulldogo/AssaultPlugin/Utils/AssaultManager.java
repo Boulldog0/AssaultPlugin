@@ -1,6 +1,7 @@
 package fr.Boulldogo.AssaultPlugin.Utils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -9,7 +10,6 @@ import javax.annotation.Nullable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -122,10 +122,7 @@ public class AssaultManager {
         assaults.get(idx).changeZone(zone);
         
         for(Player p : assault.getAllPlayers()) {
-    		String message = plugin.getConfig().getString("messages.zone-location")
-        			.replace("%faction", faction.getTag())
-        			.replace("%locX", String.valueOf(zoneLoc.getBlockX())
-        			.replace("%locZ", String.valueOf(zoneLoc.getBlockZ())));
+    		String message = plugin.getConfig().getString("messages.zone-location").replace("%faction", faction.getTag()).replace("%location", zoneLoc.getBlockX() + "/" + zoneLoc.getBlockZ());
         	p.sendMessage(prefix + translateString(message));
         }
 	}
@@ -175,9 +172,10 @@ public class AssaultManager {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				float midAssault = AssaultPlugin.getInstance().getConfig().getInt("duration_of_assault") / 2;
 				if(assaults.isEmpty()) return;
-				for(Assault assault : assaults) {
+				Iterator<Assault> iterator = assaults.iterator();	
+				while(iterator.hasNext()) {
+					Assault assault = iterator.next();
 					if(assault.secondsRemaining > 0) {
 						assault.secondsRemaining -= 1;
 					} else {
@@ -185,28 +183,18 @@ public class AssaultManager {
 							assault.secondsRemaining = 59;
 							assault.minutesRemaining -= 1;
 						} else {
-							stopAssault(assault);
+							stopAssault(assault, false);
+							iterator.remove();
 						}
 					}
-					float minutes = assault.minutesRemaining + (assault.secondsRemaining / 60);
-					if(minutes == midAssault) {
-						if(AssaultPlugin.getInstance().getConfig().getBoolean("capturable-zone.enable-zones") && AssaultPlugin.getInstance().getConfig().getBoolean("capturable-zone.rotate-zone-in-mid-assault")) {
-							if(AssaultPlugin.getInstance().getConfig().getBoolean("capturable-zone.change-zone-territory-in-mid-assault")) {
-								List<Player> players = assault.zone.getPlayers();
+					int minutes = assault.minutesRemaining;
+					int seconds = assault.secondsRemaining;
+					if(seconds == 0 && minutes == AssaultPlugin.getInstance().getConfig().getInt("capturable-zone.change-zone-time")) {
+						if(AssaultPlugin.getInstance().getConfig().getBoolean("capturable-zone.enable-zones") && AssaultPlugin.getInstance().getConfig().getBoolean("capturable-zone.rotate-zone-assault")) {
+							if(AssaultPlugin.getInstance().getConfig().getBoolean("capturable-zone.change-zone-territory-assault")) {
 								AssaultManager.changeZone(assault, assault.belligerentAttackFaction, null);
-								
-								Assault updatedAssault = getFactionAssault(assault.belligerentAttackFaction);
-								players.forEach(player -> {
-									updatedAssault.zone.addPlayer(player);
-								});
 							} else {
-								List<Player> players = assault.zone.getPlayers();
 								AssaultManager.changeZone(assault, assault.belligerentDefenseFaction, null);
-								
-								Assault updatedAssault = getFactionAssault(assault.belligerentAttackFaction);
-								players.forEach(player -> {
-									updatedAssault.zone.addPlayer(player);
-								});
 							}
 						}
 					}
@@ -310,7 +298,7 @@ public class AssaultManager {
 	    );
 	}
 
-	public static void stopAssault(Assault assault) {
+	public static void stopAssault(Assault assault, boolean removeAssault) {
 		AssaultPlugin plugin = AssaultPlugin.getInstance();
 		String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
 
@@ -418,7 +406,16 @@ public class AssaultManager {
 				board.clearSlot(DisplaySlot.SIDEBAR);
 			}
 		});
-		assaults.remove(assault);
+		
+		if(removeAssault) {
+			Iterator<Assault> iterator = assaults.iterator();	
+			while(iterator.hasNext()) {
+				if(iterator.next().equals(assault)) {
+					iterator.remove();
+					break;
+				}
+			}
+		}
 	}
 
 	private static void updatePlayerScoreboards(Assault assault) {
@@ -621,9 +618,10 @@ public class AssaultManager {
 			int x = rdLoc.getBlockX();
 			int z = rdLoc.getBlockZ();
 			for(int i = 256; i > 0; i--) {
-				if(!world.getBlockAt(x, i, z).getType().equals(Material.AIR)) {
+				if(!world.getBlockAt(x, i, z).isEmpty()) {
 					finalLoc = new Location(world, x, i + 1, z);
 					resolved = true;
+					break;
 				}
 			}
 		}

@@ -59,8 +59,9 @@ capturable-zone:
    use-particles: true
    radius: 10
    height: 10
-   rotate-zone-in-mid-assault: true
-   change-zone-territory-in-mid-assault: true
+   rotate-zone-assault: true
+   change-zone-territory-assault: true
+   change-zone-time: 10
    period-duration: 10
    given-points-per-period: 5
    required-minimal-ratio-for-give-points: 1.20
@@ -260,7 +261,7 @@ messages:
   cant_hit_outside_assault: "&cVous ne pouvez pas frapper un joueur dans sa faction hors assaut !"
   #Define message sent when player try to hit another player in assault, but damaged and damager are not in the same assault.
   cant_hit_player_of_another_assault: "&cVous ne pouvez pas frapper un joueur étant dans un autre assaut que le votre !"
-  zone-location: "&aA zone was located in terriroty of %faction at location %locX/%locZ !"
+  zone-location: "&aA zone was located in terriroty of %faction at location %location !"
   neutral_request_pending_faction: "&fYour faction just request a neutral request to faction %f !"
   neutral_request_pending_target_faction: "&fYour faction just receive a neutral request from faction %f !"
   no-loc-avaiable: "&cFaction where zone was to appear can't host it. Zone will spawn in another faction of assault..."

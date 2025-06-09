@@ -33,10 +33,7 @@ public class CmdZone extends AssaultSubcommand {
 		String facName = assault.zone.getTerritory().getTag();
 		String locX = String.valueOf(assault.zone.getLoc().getBlockX());
 		String locZ = String.valueOf(assault.zone.getLoc().getBlockZ());
-		String message = this.getPlugin().getConfig().getString("messages.zone-location")
-				.replace("%faction", facName)
-				.replace("%locX", locX)
-				.replace("%locZ", locZ);
+		String message = this.getPlugin().getConfig().getString("messages.zone-location").replace("%faction", facName).replace("%location", locX + "/" + locZ);
 		player.sendMessage(prefix + translateString(message));
 	}
 }

@@ -49,7 +49,7 @@ public class CmdAdmin extends AssaultSubcommand {
             }
             
             Assault assault = AssaultManager.getFactionAssault(faction);
-            AssaultManager.stopAssault(assault);
+            AssaultManager.stopAssault(assault, true);
             player.sendMessage(prefix + ChatColor.GREEN + "Assault stopped for faction " + faction.getTag() + "!");
         } else if(command.equals("resetcd")) {
             if(!this.isArgSet(3)) {
