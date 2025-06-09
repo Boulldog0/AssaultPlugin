@@ -3,38 +3,39 @@
 #Define if you want to show prefix or no
 use-prefix: true
 #Define the prefix used for commands
-prefix: "&8[&bAssaut&8] "
+prefix: "&8[&bAssault&8] "
 
 #=================Permissions=======================#
 
 #Defined the message sent if a player executes a command without having permission
-no-permission: "&cVous n'avez pas la permission d'exécuter cette commande."
+no-permission: "&cYou hav'nt permission to do this."
 #Define if you allow join assault or no
 allow_assault_join: true
 
 #=================Help Message=======================#
 
-#Header of help message
-help_header: "&b=== Aide Assault ==="
-help_1: "&7/assault help : Affiche cette aide."
-help_2: "&7/assault list : Liste les assauts en cours."
-help_3: "&7/assault <faction>(or player) : Lance un assaut sur une faction."
-help_4: "&7/assault admin : Commandes d'administration."
-help_5: "&7/assault ranking : Ranking des factions ayant gagné le plus d'assaut."
-help_6: "&7/assault join <faction>: Permet de rejoindre un assaut d'un coté ou de l'autre de celui ci."
-help_7: "&7/assault accept <faction> : Permet d'accepter une demande d'aide faite par une faction à une autre."
-#Footer of help message
-help_footer: "&b==================="
+help-message:
+  - "&b=== Aide Assault ==="
+  - "&7/assault help : Show this help page."
+  - "&7/assault list : List of assaults in progress."
+  - "&7/assault <faction>(or player) : Start an assault on a faction."
+  - "&7/assault admin : Admin commands."
+  - "&7/assault ranking : Ranking of the top of factions."
+  - "&7/assault zone : Show the localization of assault zone of assault where you are."
+  - "&7/assault join <faction>: Join an assault with a faction."
+  - "&7/assault accept <faction> : Accept join request of a faction."
+  - "&b==================="
 
 #=================Ranking Settings=======================#
 
 #ranking header
-ranking_header: "&b=== Classement top 10 ==="
+ranking_header: "&b=== Ranking - Top 10 ==="
 #ranking lines (showing entries to 1 from x)
 #Placeholders for this settings : %c >> ranking of this line | %f >> Tag of the faction | %p >> Elo points of the faction | %w >> Number of wins (all time) | %l >> Number of looses (all time)
-ranking_lines: "n°%c : %f (%p points d'elo pour %w victoires et %l defaites)"
+ranking_lines: "n°%c : %f (%p elo points for %w wins and %l looses)"
 #ranking footer
 ranking_footer: "&b=================="
+ranking_no_entries: "&cNo entries found for assault ranking."
 #Number of entries showed in tchat
 ranking_entries: 10
 
@@ -52,6 +53,18 @@ played_sound: ENTITY_PLAYER_LEVELUP
 disable-inter-assault-pvp: true
 #Define if you want to disable the pvp in faction territory who are not in assault (enable per default with SaberFactions)
 disable-default-faction-pvp: true
+
+capturable-zone:
+   enable-zones: true
+   use-particles: true
+   radius: 10
+   height: 10
+   rotate-zone-in-mid-assault: true
+   change-zone-territory-in-mid-assault: true
+   period-duration: 10
+   given-points-per-period: 5
+   required-minimal-ratio-for-give-points: 1.20
+   zone-world: world
 
 #=================Assaults Settings=======================#
 
@@ -92,6 +105,8 @@ enable_anti_deconnexion_system: true
 count_kill_after: 120
 #Define if you want to disable direct neutral system (if you disable it, when player execute /f neutral 'faction', a demand will sent in another faction instead of direct neutral the two factions.)
 disable-neutral-without-confirmation: true
+disable-damages-in-same-side: true
+players-tagged-for: 10
 
 #=================Scoreboard Settings=======================#
 
@@ -245,6 +260,13 @@ messages:
   cant_hit_outside_assault: "&cVous ne pouvez pas frapper un joueur dans sa faction hors assaut !"
   #Define message sent when player try to hit another player in assault, but damaged and damager are not in the same assault.
   cant_hit_player_of_another_assault: "&cVous ne pouvez pas frapper un joueur étant dans un autre assaut que le votre !"
+  zone-location: "&aA zone was located in terriroty of %faction at location %locX/%locZ !"
+  neutral_request_pending_faction: "&fYour faction just request a neutral request to faction %f !"
+  neutral_request_pending_target_faction: "&fYour faction just receive a neutral request from faction %f !"
+  no-loc-avaiable: "&cFaction where zone was to appear can't host it. Zone will spawn in another faction of assault..."
+  zone-cant-spawn: "&cNo avaiable zone was found in belligerent factions. Assault will be cancelled..."
+  you-enter-in-capture-zone: "&aYou just entred into the capture zone !"
+  you-leave-capture-zone: "&cYou just leave the capture zone !"
 #==================Server Settings========================#
 #=================DO NOT TOUCH IT !=======================#
 

@@ -14,14 +14,14 @@ import org.bukkit.inventory.ItemStack;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 
-import fr.Boulldogo.AssaultPlugin.Main;
-import fr.Boulldogo.AssaultPlugin.Commands.AssaultCommand;
+import fr.Boulldogo.AssaultPlugin.AssaultPlugin;
+import fr.Boulldogo.AssaultPlugin.Utils.AssaultManager;
 
 public class InteractListener implements Listener {
 
-    private final Main plugin;
+    private final AssaultPlugin plugin;
 
-    public InteractListener(Main plugin) {
+    public InteractListener(AssaultPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -150,10 +150,7 @@ public class InteractListener implements Listener {
     }
 
     public boolean isInAssault(Faction faction) {
-        return AssaultCommand.attackAssaultList.contains(faction)
-                || AssaultCommand.defenseAssaultList.contains(faction)
-                || AssaultCommand.attackJoinList.contains(faction)
-                || AssaultCommand.defenseJoinList.contains(faction);
+        return AssaultManager.isFactionInAssault(faction);
     }
 
     public String translateString(String s) {

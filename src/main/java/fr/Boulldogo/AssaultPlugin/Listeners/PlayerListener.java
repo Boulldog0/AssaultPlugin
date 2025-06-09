@@ -1,26 +1,29 @@
 package fr.Boulldogo.AssaultPlugin.Listeners;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.Factions;
 
-import fr.Boulldogo.AssaultPlugin.Main;
-import fr.Boulldogo.AssaultPlugin.Commands.AssaultCommand;
+import fr.Boulldogo.AssaultPlugin.AssaultPlugin;
+import fr.Boulldogo.AssaultPlugin.Utils.Assault;
+import fr.Boulldogo.AssaultPlugin.Utils.AssaultManager;
 
 public class PlayerListener implements Listener {
 	
-	private final Main plugin;
+	private final AssaultPlugin plugin;
 	
-	public PlayerListener(Main plugin) {
+	public PlayerListener(AssaultPlugin plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -35,28 +38,21 @@ public class PlayerListener implements Listener {
 			Faction damagerFac = FPlayers.getInstance().getByPlayer(damager).getFaction();
 			
 			if(plugin.getConfig().getBoolean("disable-default-faction-pvp")) {
-				FLocation damagedFLoc = FLocation.wrap(FPlayers.getInstance().getByPlayer(damaged));
-				
+				FLocation damagedFLoc = FLocation.wrap(FPlayers.getInstance().getByPlayer(damaged));	
 				Faction whereIsDamaged = Board.getInstance().getFactionAt(damagedFLoc);
 				
 				if(damagedFac != null && !damagedFac.isWilderness()) {
 					if(whereIsDamaged == damagedFac) {
-						if(AssaultCommand.attackAssaultList.isEmpty()) {
+						if(AssaultManager.assaults.isEmpty()) {
 							e.setCancelled(true);
 							damager.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.cant_hit_outside_assault")));
 							return;
-						} else if(!AssaultCommand.attackAssaultList.contains(damagedFac)
-						&& !AssaultCommand.defenseAssaultList.contains(damagedFac)
-						&& !AssaultCommand.attackJoinList.contains(damagedFac)
-						&& !AssaultCommand.defenseJoinList.contains(damagedFac)) {
+						} else if(!AssaultManager.isFactionInAssaultOrJoinAssault(damagedFac)) {
 							e.setCancelled(true);
 							damager.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.cant_hit_outside_assault")));
 							return;
 						} else {
-							if(!AssaultCommand.attackAssaultList.contains(damagerFac)
-									&& !AssaultCommand.defenseAssaultList.contains(damagerFac)
-									&& !AssaultCommand.attackJoinList.contains(damagerFac)
-									&& !AssaultCommand.defenseJoinList.contains(damagerFac)) {
+							if(!AssaultManager.isFactionInAssaultOrJoinAssault(damagerFac)) {
 								e.setCancelled(true);
 								damager.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.cant_hit_outside_assault")));
 								return;
@@ -67,100 +63,84 @@ public class PlayerListener implements Listener {
 			}
 			
 			if(plugin.getConfig().getBoolean("disable-inter-assault-pvp")) {
-				
-				if(AssaultCommand.attackAssaultList.isEmpty()) return;
-				
-				else if(!AssaultCommand.attackAssaultList.contains(damagedFac)
-				&& !AssaultCommand.defenseAssaultList.contains(damagedFac)
-				&& !AssaultCommand.attackJoinList.contains(damagedFac)
-				&& !AssaultCommand.defenseJoinList.contains(damagedFac)) {
-					boolean isOriginalFaction = AssaultCommand.attackAssaultList.contains(damagedFac) || AssaultCommand.defenseAssaultList.contains(damagedFac);
-					boolean attackSide = isOriginalFaction && AssaultCommand.attackAssaultList.contains(damagedFac);
-					
-					if(isOriginalFaction) {
-						int index = 0;
-						if(attackSide) {
-							index = AssaultCommand.attackAssaultList.lastIndexOf(damagedFac);
-						} else {
-							index = AssaultCommand.defenseAssaultList.lastIndexOf(damagedFac);
-						}
-						
-						Faction attackFac = AssaultCommand.attackAssaultList.get(index);
-						Faction defenseFac = AssaultCommand.defenseAssaultList.get(index);
-						
-						if(AssaultCommand.attackAssaultList.contains(damagerFac) || AssaultCommand.defenseAssaultList.contains(damagerFac)) {
-							if(!damagerFac.equals(attackFac) && !damagerFac.equals(defenseFac)) {
-								e.setCancelled(true);
-								damager.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.cant_hit_player_of_another_assault")));
-							}
-						}
-					} else {
-						
-						if(!AssaultCommand.attackAssaultList.isEmpty()) {
-							boolean attackJoinSide = AssaultCommand.attackJoinList.contains(damagedFac);
-							
-							int index = 0;
-							if(attackJoinSide) {
-								for(Faction fac : Factions.getInstance().getAllFactions()) {
-									if(plugin.getConfig().getStringList("assault.join.attack." + fac.getTag()).contains(damagedFac.getTag())) {
-										index = AssaultCommand.attackAssaultList.lastIndexOf(fac);
-										break;
-									}
-								}
-							} else {
-								if(!AssaultCommand.defenseJoinList.isEmpty()) {
-									for(Faction fac : Factions.getInstance().getAllFactions()) {
-										if(plugin.getConfig().getStringList("assault.join.defense." + fac.getTag()).contains(damagedFac.getTag())) {
-											index = AssaultCommand.defenseAssaultList.lastIndexOf(fac);
-											break;
-										}
-									}
-								}
-							}
-							
-							Faction attackSideFac = AssaultCommand.attackAssaultList.get(index);
-							Faction defenseSideFac = AssaultCommand.defenseAssaultList.get(index);
-							
-							if(AssaultCommand.attackAssaultList.contains(damagerFac) || AssaultCommand.defenseAssaultList.contains(damagerFac)) {
-								if(!damagerFac.equals(attackSideFac) && !damagerFac.equals(defenseSideFac)) {
-									e.setCancelled(true);
-									damager.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.cant_hit_player_of_another_assault")));
-									return;
-								}
-							}
-							
-							boolean damagerAttackJoinSide = AssaultCommand.attackJoinList.contains(damagedFac);
-							
-							int damagerIndex = 0;
-							if(damagerAttackJoinSide) {
-								for(Faction fac : Factions.getInstance().getAllFactions()) {
-									if(plugin.getConfig().getStringList("assault.join.attack." + fac.getTag()).contains(damagedFac.getTag())) {
-										damagerIndex = AssaultCommand.attackAssaultList.lastIndexOf(fac);
-										break;
-									}
-								}
-							} else {
-								if(!AssaultCommand.defenseJoinList.isEmpty()) {
-									for(Faction fac : Factions.getInstance().getAllFactions()) {
-										if(plugin.getConfig().getStringList("assault.join.defense." + fac.getTag()).contains(damagedFac.getTag())) {
-											damagerIndex = AssaultCommand.defenseAssaultList.lastIndexOf(fac);
-											break;
-										}
-									}
-								}
-							}
-							
-							Faction damagerAttackSide = AssaultCommand.attackAssaultList.get(damagerIndex);
-							Faction damagerDefenseSide = AssaultCommand.defenseAssaultList.get(damagerIndex);
-							
-							if(!attackSideFac.equals(damagerAttackSide) && !defenseSideFac.equals(damagerDefenseSide)) {
-								e.setCancelled(true);
-								damager.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.cant_hit_player_of_another_assault")));
-								return;
-							}
-						}
-					}
+				if(AssaultManager.assaults.isEmpty()) return;
+				if(!AssaultManager.isInSameAssaults(damaged, damager)) {
+					damager.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.cant_hit_player_of_another_assault")));
+					e.setCancelled(true);
+					return;
 				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent e) {
+		if(!plugin.getConfig().getBoolean("capturable-zone.enable-zones")) return;
+		Player player = e.getPlayer();
+		Location toLoc = e.getTo();
+		if(toLoc == null) return;
+		if(e.getFrom().getBlock().equals(e.getTo().getBlock())) return;
+		if(!player.getWorld().getName().equals(plugin.getConfig().getString("capturable-zone.zone-world"))) return;
+		Faction playerFac = FPlayers.getInstance().getByPlayer(player).getFaction();
+		if(!AssaultManager.isFactionInAssaultOrJoinAssault(playerFac)) return;
+		
+		Assault assault = AssaultManager.getFactionAssault(playerFac);
+		if(assault == null || assault.zone == null) return;
+		Location zoneLoc = assault.zone.getLoc();
+		int radius = assault.zone.getRadius();
+		int height = assault.zone.getHeight();
+		
+		boolean isInZone = false;
+		if(toLoc.getBlockX() >= zoneLoc.getBlockX() - radius && toLoc.getBlockX() <= zoneLoc.getBlockX() + radius) {
+			if(toLoc.getBlockZ() >= zoneLoc.getBlockZ() - radius && toLoc.getBlockZ() <= zoneLoc.getBlockZ() + radius) {
+				if(toLoc.getBlockY() >= zoneLoc.getBlockY() && toLoc.getBlockY() <= zoneLoc.getBlockY() + height) {
+					isInZone = true;
+				}
+			}
+		}
+		if(isInZone) {
+			if(!assault.zone.isPlayerInside(player)) {
+				assault.zone.addPlayer(player);
+			}
+		} else {
+			if(assault.zone.isPlayerInside(player)) {
+				assault.zone.removePlayer(player);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerTeleport(PlayerTeleportEvent e) {
+		if(!plugin.getConfig().getBoolean("capturable-zone.enable-zones")) return;
+		Player player = e.getPlayer();
+		Location toLoc = e.getTo();
+		if(toLoc == null) return;
+		if(e.getFrom().getBlock().equals(e.getTo().getBlock())) return;
+		if(!player.getWorld().getName().equals(plugin.getConfig().getString("capturable-zone.zone-world"))) return;
+		Faction playerFac = FPlayers.getInstance().getByPlayer(player).getFaction();
+		if(!AssaultManager.isFactionInAssaultOrJoinAssault(playerFac)) return;
+		
+		Assault assault = AssaultManager.getFactionAssault(playerFac);
+		if(assault == null || assault.zone == null) return;
+		Location zoneLoc = assault.zone.getLoc();
+		int radius = assault.zone.getRadius();
+		int height = assault.zone.getHeight();
+		
+		boolean isInZone = false;
+		if(toLoc.getBlockX() >= zoneLoc.getBlockX() - radius && toLoc.getBlockX() <= zoneLoc.getBlockX() + radius) {
+			if(toLoc.getBlockZ() >= zoneLoc.getBlockZ() - radius && toLoc.getBlockZ() <= zoneLoc.getBlockZ() + radius) {
+				if(toLoc.getBlockY() >= zoneLoc.getBlockY() && toLoc.getBlockY() <= zoneLoc.getBlockY() + height) {
+					isInZone = true;
+				}
+			}
+		}
+		if(isInZone) {
+			if(!assault.zone.isPlayerInside(player)) {
+				assault.zone.addPlayer(player);
+			}
+		} else {
+			if(assault.zone.isPlayerInside(player)) {
+				assault.zone.removePlayer(player);
 			}
 		}
 	}

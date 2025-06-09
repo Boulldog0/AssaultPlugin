@@ -2,17 +2,17 @@ package fr.Boulldogo.AssaultPlugin.Utils;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
-import fr.Boulldogo.AssaultPlugin.Main;
+import fr.Boulldogo.AssaultPlugin.AssaultPlugin;
 
 import java.io.*;
 import java.util.*;
 
 public class YamlUpdater {
-    private final Main plugin;
+    private final AssaultPlugin plugin;
     private final Yaml yamlLoader;
     private final Yaml yamlDumper;
 
-    public YamlUpdater(Main plugin) {
+    public YamlUpdater(AssaultPlugin plugin) {
         this.plugin = plugin;
         this.yamlLoader = new Yaml();
 

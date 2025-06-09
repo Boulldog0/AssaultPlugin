@@ -2,19 +2,20 @@ package fr.Boulldogo.AssaultPlugin.API;
 
 import com.massivecraft.factions.Faction;
 
-import fr.Boulldogo.AssaultPlugin.Main;
-import fr.Boulldogo.AssaultPlugin.Commands.AssaultCommand;
+import fr.Boulldogo.AssaultPlugin.AssaultPlugin;
+import fr.Boulldogo.AssaultPlugin.Utils.Assault;
+import fr.Boulldogo.AssaultPlugin.Utils.AssaultManager;
 
 public class AssaultAPI {
     
     private static AssaultAPI instance;
-    private final Main plugin;
+    private final AssaultPlugin plugin;
 
-    public AssaultAPI(Main plugin) {
+    public AssaultAPI(AssaultPlugin plugin) {
         this.plugin = plugin;
     }
 
-    public static void init(Main plugin) {
+    public static void init(AssaultPlugin plugin) {
         if(instance == null) {
             instance = new AssaultAPI(plugin);
         }
@@ -22,7 +23,7 @@ public class AssaultAPI {
 
     public static AssaultAPI getInstance() {
         if(instance == null) {
-            throw new IllegalStateException("API not initialized. Call init(Main plugin) first.");
+            throw new IllegalStateException("API not initialized. Call init(AssaultPlugin plugin) first.");
         }
         return instance;
     }
@@ -83,36 +84,37 @@ public class AssaultAPI {
     }
     
     public boolean isInAssault(Faction faction) {
-    	if(AssaultCommand.attackAssaultList.isEmpty()) return false;
-    	return AssaultCommand.attackAssaultList.contains(faction)
-    		|| AssaultCommand.defenseAssaultList.contains(faction)
-    		|| AssaultCommand.attackJoinList.contains(faction)
-    		|| AssaultCommand.defenseJoinList.contains(faction);
+    	return AssaultManager.isFactionInAssaultOrJoinAssault(faction);
     }
     
     public boolean isDirectAssaultFaction(Faction faction) {
-    	if(AssaultCommand.attackAssaultList.isEmpty()) return false;
-    	return AssaultCommand.attackAssaultList.contains(faction)
-    		|| AssaultCommand.defenseAssaultList.contains(faction);
+    	return AssaultManager.isFactionInAssault(faction);
+    }
+    
+    public Assault getFactionAssault(Faction faction) {
+    	return AssaultManager.getFactionAssault(faction);
     }
     
     public boolean isTheSameAssault(Faction faction, Faction faction2) {
-    	if(AssaultCommand.attackAssaultList.isEmpty()) return false;
-    	if(!isDirectAssaultFaction(faction)) return false;
-    	if(!isDirectAssaultFaction(faction2)) return false;
-    	boolean isAttack = AssaultCommand.attackAssaultList.contains(faction);
+    	if(!AssaultManager.isFactionInAssault(faction2) || !AssaultManager.isFactionInAssault(faction)) return false;
+    	if(faction.equals(faction2)) return true;
+    	Assault facAssault = AssaultManager.getFactionAssault(faction);
     	
-    	int index = 0;
-    	if(isAttack) {
-    		index = AssaultCommand.attackAssaultList.lastIndexOf(faction);
-    	} else {
-    		index = AssaultCommand.defenseAssaultList.lastIndexOf(faction);
+    	if(facAssault.belligerentAttackFaction.equals(faction2)
+    	|| facAssault.belligerentDefenseFaction.equals(faction2)) {
+    		return true;
     	}
     	
-    	if(isAttack) {
-    		return AssaultCommand.defenseAssaultList.get(index) == faction2;
-    	} else {
-    		return AssaultCommand.attackAssaultList.get(index) == faction2;
+    	for(Faction f : facAssault.attackJoins) {
+    		if(f.equals(faction2)) {
+    			return true;
+    		}
     	}
+    	for(Faction f : facAssault.defenseJoins) {
+    		if(f.equals(faction2)) {
+    			return true;
+    		}
+    	}
+    	return false;
     }
 }

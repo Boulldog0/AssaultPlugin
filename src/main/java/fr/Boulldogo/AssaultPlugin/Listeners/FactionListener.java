@@ -7,14 +7,14 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.event.FactionRelationWishEvent;
 import com.massivecraft.factions.struct.Relation;
 
-import fr.Boulldogo.AssaultPlugin.Main;
+import fr.Boulldogo.AssaultPlugin.AssaultPlugin;
 import net.md_5.bungee.api.ChatColor;
 
 public class FactionListener implements Listener {
 	
-	private final Main plugin;
+	private final AssaultPlugin plugin;
 	
-	public FactionListener(Main plugin) {
+	public FactionListener(AssaultPlugin plugin) {
 		this.plugin = plugin;
 	}
 	

@@ -4,21 +4,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.massivecraft.factions.Faction;
+import fr.Boulldogo.AssaultPlugin.Utils.AssaultManager.AssaultSide;
 
 public class KillInAssaultEvent extends Event {
 	
     private static final HandlerList handlers = new HandlerList();
     private Player player;
     private int givenPoints;
-    private Faction playerSideFaction;
-    private Faction enemySideFaction;
+    private AssaultSide side;
 	
-	public KillInAssaultEvent(Player player, int givenPoints, Faction playerSideFaction, Faction enemySideFaction) {
+	public KillInAssaultEvent(Player player, int givenPoints, AssaultSide side) {
 		this.player = player;
 		this.givenPoints = givenPoints;
-		this.playerSideFaction = playerSideFaction;
-		this.enemySideFaction = enemySideFaction;
+		this.side = side;
 	}
 	
 	public Player getPlayer() {
@@ -29,12 +27,8 @@ public class KillInAssaultEvent extends Event {
 		return givenPoints;
 	}
 	
-	public Faction getPlayerSideFaction() {
-		return playerSideFaction;
-	}
-	
-	public Faction getEnemySideFaction() {
-		return enemySideFaction;
+	public AssaultSide getSide() {
+		return side;
 	}
 
 	@Override
