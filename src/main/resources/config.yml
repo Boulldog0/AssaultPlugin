@@ -268,6 +268,7 @@ messages:
   zone-cant-spawn: "&cNo avaiable zone was found in belligerent factions. Assault will be cancelled..."
   you-enter-in-capture-zone: "&aYou just entred into the capture zone !"
   you-leave-capture-zone: "&cYou just leave the capture zone !"
+  you-cant-hit-same-side: "&cYou can't hit someone in the same side than you !"
 #==================Server Settings========================#
 #=================DO NOT TOUCH IT !=======================#
 

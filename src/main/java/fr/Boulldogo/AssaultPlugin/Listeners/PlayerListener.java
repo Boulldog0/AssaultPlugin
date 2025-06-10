@@ -29,6 +29,7 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityDamagedEvent(EntityDamageByEntityEvent e) {
+		if(e.isCancelled()) return;
 		String prefix = plugin.getConfig().getBoolean("use-prefix") ? translateString(plugin.getConfig().getString("prefix")) : "";
 		if(e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
 			Player damaged = (Player) e.getEntity();
@@ -61,6 +62,16 @@ public class PlayerListener implements Listener {
 					}
 				}
 			}
+			
+        	if(plugin.getConfig().getBoolean("disable-damages-in-same-side")) {
+        		if(!AssaultManager.isFactionInAssaultOrJoinAssault(damagerFac) || !AssaultManager.isFactionInAssaultOrJoinAssault(damagedFac)) return;
+        		if(!AssaultManager.isInSameAssaults(damaged, damager)) return;
+            	if(AssaultManager.getSide(damagerFac).equals(AssaultManager.getSide(damagedFac))) {
+            		e.setCancelled(true);
+					damager.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.you-cant-hit-same-side")));
+					return;
+            	}
+        	}
 			
 			if(plugin.getConfig().getBoolean("disable-inter-assault-pvp")) {
 				if(AssaultManager.assaults.isEmpty()) return;

@@ -64,13 +64,7 @@ public class AssaultListener implements Listener {
                 Faction damagedFac = FPlayers.getInstance().getByPlayer(damaged).getFaction();
                 Faction damagerFac = FPlayers.getInstance().getByPlayer(damager).getFaction();
                 
-                if(AssaultManager.getSide(damagerFac).equals(AssaultManager.getSide(damagedFac))) {
-                	if(plugin.getConfig().getBoolean("disable-damages-in-same-side")) {
-                		e.setCancelled(true);
-                		return;
-                	}
-                }
-                
+                if(!AssaultManager.isFactionInAssaultOrJoinAssault(damagerFac) || !AssaultManager.isFactionInAssaultOrJoinAssault(damagedFac)) return;
                 Assault assault = AssaultManager.getFactionAssault(damagerFac);
                 AssaultSide damagedSide = AssaultManager.getSide(damagedFac);
             	AtomicInteger aI = new AtomicInteger();
