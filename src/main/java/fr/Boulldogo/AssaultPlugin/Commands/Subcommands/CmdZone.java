@@ -20,7 +20,7 @@ public class CmdZone extends AssaultSubcommand {
 	public void execute(Player player) {
 		Faction playerFac = FPlayers.getInstance().getByPlayer(player).getFaction();
 		if(!AssaultManager.isFactionInAssaultOrJoinAssault(playerFac)) {
-			player.sendMessage(prefix + ChatColor.RED + "You muse be in assault for perform this command !");
+			player.sendMessage(prefix + ChatColor.RED + "You must be in assault for perform this command !");
 			return;
 		}
 		
@@ -30,6 +30,12 @@ public class CmdZone extends AssaultSubcommand {
 		}
 		
 		Assault assault = AssaultManager.getFactionAssault(playerFac);
+		
+		if(assault.zone == null) {
+			player.sendMessage(prefix + ChatColor.RED + "No zone found at this time !");
+			return;
+		}
+		
 		String facName = assault.zone.getTerritory().getTag();
 		String locX = String.valueOf(assault.zone.getLoc().getBlockX());
 		String locZ = String.valueOf(assault.zone.getLoc().getBlockZ());

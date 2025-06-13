@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.massivecraft.factions.Faction;
@@ -36,6 +37,8 @@ public class Assault {
 	public Map<String, AtomicInteger> defenseDisconnectedPlayers;
 	
 	public CapturableZone zone;
+	public AssaultSide zoneSide;
+	public Location zoneWaypoint;
 	
 	@SuppressWarnings("deprecation")
 	public Assault(Faction attackFac, Faction defenseFac) {
@@ -44,11 +47,9 @@ public class Assault {
 		this.attackJoins = new ArrayList<>();
 		this.defenseJoins = new ArrayList<>();
 		this.realStartTime = Timestamp.from(Instant.now());
-		this.formattedStartTime = realStartTime.getHours() + ":" + realStartTime.getMinutes();
-		
+		this.formattedStartTime = (realStartTime.getHours() < 10 ? ("0" + realStartTime.getHours()) : realStartTime.getHours()) + ":" + (realStartTime.getMinutes() < 10 ? ("0" + realStartTime.getMinutes()) : realStartTime.getMinutes());	
 		this.attackTaggedPlayers = new HashMap<>();
 		this.defenseTaggedPlayers = new HashMap<>();
-		
 		this.attackDisconnectedPlayers = new HashMap<>();
 		this.defenseDisconnectedPlayers = new HashMap<>();
 	}

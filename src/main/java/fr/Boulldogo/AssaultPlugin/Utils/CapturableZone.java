@@ -24,6 +24,7 @@ public class CapturableZone {
 	private int height;
 	private Particle particles;
 	private List<Player> insidePlayers;
+	private List<Location> allZoneBlocks;
 	
 	public CapturableZone(Location loc, Faction territory, int radius, int height, @Nullable Particle particles) {
 		this.loc = loc;
@@ -31,7 +32,23 @@ public class CapturableZone {
 		this.particles = Particle.FLAME;
 		this.height = height;
 		this.insidePlayers = new ArrayList<>();
+		this.allZoneBlocks = new ArrayList<>();
+		completeZoneBlocks();
 		this.territory = territory;
+	}
+	
+	public void completeZoneBlocks() {
+		for(int x = loc.getBlockX() - radius; x < loc.getBlockX() + radius; x++) {
+			for(int z = loc.getBlockZ() - radius; z < loc.getBlockZ() + radius; z++) {
+				for(int y = loc.getBlockY(); y < loc.getBlockY() + height; y++) {
+					allZoneBlocks.add(new Location(loc.getWorld(), x, y, z));
+				}
+			}
+		}
+	}
+	
+	public boolean isLocationInZone(Location loc) {
+		return allZoneBlocks.contains(loc);
 	}
 	
 	public Location getLoc() {

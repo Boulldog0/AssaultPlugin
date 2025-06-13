@@ -24,6 +24,7 @@ help-message:
   - "&7/assault zone : Show the localization of assault zone of assault where you are."
   - "&7/assault join <faction>: Join an assault with a faction."
   - "&7/assault accept <faction> : Accept join request of a faction."
+  - "&7/assault waypoint : Teleport you to assault waypoint."
   - "&b==================="
 
 #=================Ranking Settings=======================#
@@ -66,6 +67,7 @@ capturable-zone:
    given-points-per-period: 5
    required-minimal-ratio-for-give-points: 1.20
    zone-world: world
+   create-random-waypoints: true
 
 #=================Assaults Settings=======================#
 
@@ -269,6 +271,9 @@ messages:
   you-enter-in-capture-zone: "&aYou just entred into the capture zone !"
   you-leave-capture-zone: "&cYou just leave the capture zone !"
   you-cant-hit-same-side: "&cYou can't hit someone in the same side than you !"
+  no-loc-avaiable-for-waypoint: "&cNo avaiable location found in the faction territory where the zone is for set a waypoint !"
+  waypoint-loc: "&aA new assault waypoint was located at location %location in territory of %faction ! Type /assault waypoint for teleport to it !"
+  waypoint-disappear: "&cYou'r assault waypoint just disapear !"
 #==================Server Settings========================#
 #=================DO NOT TOUCH IT !=======================#
 

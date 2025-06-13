@@ -6,12 +6,14 @@ import org.bukkit.entity.Player;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.FLocation;
+import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 
 import fr.Boulldogo.AssaultPlugin.AssaultPlugin;
 import fr.Boulldogo.AssaultPlugin.Commands.Abstract.AssaultSubcommand;
 import fr.Boulldogo.AssaultPlugin.Utils.Assault;
 import fr.Boulldogo.AssaultPlugin.Utils.AssaultManager;
+import fr.Boulldogo.AssaultPlugin.Utils.AssaultManager.AssaultSide;
 
 public class CmdAdmin extends AssaultSubcommand {
 	
@@ -139,6 +141,11 @@ public class CmdAdmin extends AssaultSubcommand {
                 player.sendMessage(prefix + ChatColor.RED + "Correct arguments: /assault admin setzone <one_of_faction_in_assault>");
                 return;
             }
+            
+    		if(!this.getPlugin().getConfig().getBoolean("capturable-zone.enable-zones")) {
+    			player.sendMessage(prefix + ChatColor.RED + "This feature is disabled !");
+    			return;
+    		}
 
             Faction faction = this.getArgAsFaction(1);
             if(faction == null || faction.isWilderness()) {
@@ -167,6 +174,80 @@ public class CmdAdmin extends AssaultSubcommand {
             }
             AssaultManager.changeZone(assault, territory, loc);
             player.sendMessage(prefix + ChatColor.GREEN + "Capture zone correctly moved at your position.");
+        } else if(command.equals("changewaypoint")) {
+            if(!this.isArgSet(2)) {
+                player.sendMessage(prefix + ChatColor.RED + "Correct arguments: /assault admin changewaypoint <one_of_faction_in_assault>");
+                return;
+            }
+
+            Faction faction = this.getArgAsFaction(1);
+            if(faction == null || faction.isWilderness()) {
+                player.sendMessage(prefix + ChatColor.RED + "You cannot change waypoint for a null faction !");
+                return;
+            }
+            
+            if(!AssaultManager.isFactionInAssault(faction)) {
+                player.sendMessage(prefix + ChatColor.RED + "This faction ins'nt an assault belligerent faction !");
+                return;
+            }
+            
+            Assault assault = AssaultManager.getFactionAssault(faction);
+            
+    		if(!this.getPlugin().getConfig().getBoolean("capturable-zone.enable-zones")) {
+    			player.sendMessage(prefix + ChatColor.RED + "This feature is disabled !");
+    			return;
+    		}
+    		
+            if(!plugin.getConfig().getBoolean("capturable-zone.create-random-waypoints")) {
+    			player.sendMessage(prefix + ChatColor.RED + "This feature is disabled !");
+    			return;
+            }
+            Faction territory = faction;
+            AssaultSide side = AssaultManager.getSide(faction);   
+            if(side.equals(assault.zoneSide)) {
+            	if(side.equals(AssaultSide.ATTACK)) {
+            		territory = assault.belligerentDefenseFaction;
+            	} else {
+            		territory = assault.belligerentAttackFaction;
+            	}
+            }
+        	Location randomLoc = AssaultManager.getRandomLocationForFaction(territory);
+        	if(randomLoc == null) {
+        		assault.getAllPlayers().forEach(p -> {
+        			p.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.no-loc-avaiable-for-waypoint")));
+        		});
+                player.sendMessage(prefix + ChatColor.RED + "No avaiable location found in faction territory.");
+        		return;
+        	}
+        	
+        	int attempts = 150;			
+    		boolean isInZone = true;
+    		while(isInZone && attempts > 0) {
+    			attempts--;
+    			randomLoc = AssaultManager.getRandomLocationForFaction(territory);
+    			if(!assault.zone.isLocationInZone(randomLoc)) {
+    				isInZone = false;
+    			}
+    		}
+    		if(isInZone) {
+        		assault.getAllPlayers().forEach(p -> {
+        			p.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.no-loc-avaiable-for-waypoint")));
+        		});
+        		return;
+    		}
+    		
+    		assault.zoneWaypoint = randomLoc;
+    		int bX = randomLoc.getBlockX();
+    		int bZ = randomLoc.getBlockZ();
+    		String tname = territory.getTag();
+    		assault.getAllPlayers().forEach(p -> {
+    			if(!AssaultManager.getSide(FPlayers.getInstance().getByPlayer(p).getFaction()).equals(assault.zoneSide)) {
+    				p.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.waypoint-loc").replace("%location", bX + "/" + bZ).replace("%faction", tname)));
+    			} else {
+    				p.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.waypoint-disappear")));
+    			}
+    		});
+            player.sendMessage(prefix + ChatColor.GREEN + "Assault waypoint correctly moved at a new random position (" + bX + "/" + bZ + ").");
         }
 	}
 

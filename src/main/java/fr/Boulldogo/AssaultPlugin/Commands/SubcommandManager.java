@@ -10,6 +10,7 @@ import fr.Boulldogo.AssaultPlugin.Commands.Subcommands.CmdHelp;
 import fr.Boulldogo.AssaultPlugin.Commands.Subcommands.CmdJoin;
 import fr.Boulldogo.AssaultPlugin.Commands.Subcommands.CmdList;
 import fr.Boulldogo.AssaultPlugin.Commands.Subcommands.CmdRanking;
+import fr.Boulldogo.AssaultPlugin.Commands.Subcommands.CmdWaypoint;
 import fr.Boulldogo.AssaultPlugin.Commands.Subcommands.CmdZone;
 
 public class SubcommandManager {
@@ -22,6 +23,7 @@ public class SubcommandManager {
 	private static final CmdList list = new CmdList();
 	private static final CmdRanking ranking = new CmdRanking();
 	private static final CmdZone zone = new CmdZone();
+	private static final CmdWaypoint waypoint = new CmdWaypoint();
 	
 	public static void registerSubcommands() {
 		subcommands.add(accept);
@@ -31,6 +33,7 @@ public class SubcommandManager {
 		subcommands.add(list);
 		subcommands.add(ranking);
 		subcommands.add(zone);
+		subcommands.add(waypoint);
 	}
 	
 	public static List<AssaultSubcommand> getCommands() {

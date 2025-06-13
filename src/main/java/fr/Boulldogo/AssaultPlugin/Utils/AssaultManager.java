@@ -35,6 +35,7 @@ public class AssaultManager {
 	}
 
 	public static List<Assault> assaults = new ArrayList<>();
+	public static List<Assault> whiledAssaults = new ArrayList<>();
 
 	public static boolean isFactionInAssault(Faction fac) {
 		for(Assault assault : assaults) {
@@ -93,6 +94,7 @@ public class AssaultManager {
 	
 	public static void changeZone(Assault assault, Faction faction, @Nullable Location loc) {
 		AssaultPlugin plugin = AssaultPlugin.getInstance();
+		if(whiledAssaults.contains(assault)) return;
 		String prefix = AssaultPlugin.getInstance().getConfig().getBoolean("use-prefix") ? translateString(AssaultPlugin.getInstance().getConfig().getString("prefix")) : "";
 		Location zoneLoc = loc;
 		if(zoneLoc == null) {
@@ -104,8 +106,10 @@ public class AssaultManager {
         		});
 	        	if(side.equals(AssaultSide.ATTACK)) {
 	        		changeZone(assault, assault.belligerentDefenseFaction, null);
+	        		whiledAssaults.add(assault);
 	        	} else {
 	        		changeZone(assault, assault.belligerentAttackFaction, null);
+	        		whiledAssaults.add(assault);
 	        	}
 	        	return;
 	        }
@@ -120,6 +124,43 @@ public class AssaultManager {
             return;
         }
         assaults.get(idx).changeZone(zone);
+		assault.zoneSide = getSide(faction);
+        if(plugin.getConfig().getBoolean("capturable-zone.create-random-waypoints")) {
+        	Location randomLoc = AssaultManager.getRandomLocationForFaction(faction);
+        	if(randomLoc == null) {
+        		assault.getAllPlayers().forEach(player -> {
+        			player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.no-loc-avaiable-for-waypoint")));
+        		});
+        		return;
+        	}
+        	
+        	int attempts = 150;			
+    		boolean isInZone = true;
+    		while(isInZone && attempts > 0) {
+    			attempts--;
+    			randomLoc = AssaultManager.getRandomLocationForFaction(faction);
+    			if(!assault.zone.isLocationInZone(randomLoc)) {
+    				isInZone = false;
+    			}
+    		}
+    		if(isInZone) {
+        		assault.getAllPlayers().forEach(player -> {
+        			player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.no-loc-avaiable-for-waypoint")));
+        		});
+        		return;
+    		}
+    		
+    		assault.zoneWaypoint = randomLoc;
+    		int bX = randomLoc.getBlockX();
+    		int bZ = randomLoc.getBlockZ();
+    		assault.getAllPlayers().forEach(player -> {
+    			if(!getSide(FPlayers.getInstance().getByPlayer(player).getFaction()).equals(assault.zoneSide)) {
+    				player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.waypoint-loc").replace("%location", bX + "/" + bZ).replace("%faction", faction.getTag())));
+    			} else {
+    				player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.waypoint-disappear")));
+    			}
+    		});
+        }
         
         for(Player p : assault.getAllPlayers()) {
     		String message = plugin.getConfig().getString("messages.zone-location").replace("%faction", faction.getTag()).replace("%location", zoneLoc.getBlockX() + "/" + zoneLoc.getBlockZ());
@@ -247,7 +288,6 @@ public class AssaultManager {
 
 	            for(Assault assault : assaults) {
 	                CapturableZone zone = assault.zone;
-
 	                if(zone == null) {
 	                    continue;
 	                }
@@ -443,11 +483,11 @@ public class AssaultManager {
 			time = time + seconds + "s";
 		}
 
-		String scoreKey = ChatColor.YELLOW + "• Temps restant: ";
+		String scoreKey = ChatColor.YELLOW + "• Remaining time : ";
 		String scoreValue = ChatColor.YELLOW + time;
 
-		String allyKey = ChatColor.GREEN + "• Alliés Attaque: +";
-		String eAllyKey = ChatColor.RED + "• Alliés Défense: +";
+		String allyKey = ChatColor.GREEN + "• Attack allies: +";
+		String eAllyKey = ChatColor.RED + "• Defense allies: +";
 
 		for(Player player : assault.getAllPlayers()) {
 			Scoreboard board = player.getScoreboard();
@@ -460,16 +500,25 @@ public class AssaultManager {
 			if(objective == null) continue;
 
 			for(String entry : board.getEntries()) {
-				if(entry.startsWith(attackS) || entry.startsWith(defenseS) || entry.startsWith(scoreKey) || entry.startsWith(allyKey) || entry.startsWith(eAllyKey)) {
+				if(entry.startsWith(attackS) || entry.startsWith(defenseS) || entry.startsWith(ChatColor.BLUE + "• Zone loc.:") || entry.startsWith(scoreKey) || entry.startsWith(allyKey) || entry.startsWith(eAllyKey)) {
 					board.resetScores(entry);
 				}
 			}
 
-			objective.getScore(attackS + assault.attackScore + " points").setScore(8);
-			objective.getScore(defenseS + assault.defenseScore + " points").setScore(7);
+			objective.getScore(attackS + assault.attackScore + " points").setScore(10);
+			objective.getScore(defenseS + assault.defenseScore + " points").setScore(9);
 			objective.getScore(scoreKey + scoreValue).setScore(2);
-			objective.getScore(allyKey + assault.attackJoins.size()).setScore(5);
-			objective.getScore(eAllyKey + assault.defenseJoins.size()).setScore(4);
+			objective.getScore(allyKey + assault.attackJoins.size()).setScore(7);
+			objective.getScore(eAllyKey + assault.defenseJoins.size()).setScore(6);
+			
+			if(AssaultPlugin.getInstance().getConfig().getBoolean("capturable-zone.enable-zones")) {
+				CapturableZone zone = assault.zone;
+				if(zone != null) {
+					Location zoneLoc = zone.getLoc();
+					Score scoreZone = objective.getScore(ChatColor.BLUE + "• Zone loc.: " + zoneLoc.getBlockX() + "/" + zoneLoc.getBlockZ());
+					scoreZone.setScore(4);
+				}
+			}
 		}
 	}
 
@@ -491,35 +540,46 @@ public class AssaultManager {
 		}
 
 		Score space1 = objective.getScore("");
-		space1.setScore(11);
+		space1.setScore(13);
 
 		Score scoreString = objective.getScore(ChatColor.DARK_GRAY + "• Scores :");
-		scoreString.setScore(10);
+		scoreString.setScore(12);
 
 		Score space2 = objective.getScore(" ");
-		space2.setScore(9);
+		space2.setScore(11);
 
 		Score attackScore = objective.getScore(ChatColor.DARK_RED + "   • " + attackFac.getTag() + " : " + 0 + " points");
-		attackScore.setScore(8);
+		attackScore.setScore(10);
 
 		Score defenseScore = objective.getScore(ChatColor.GOLD + "   • " + defenseFac.getTag() + " : " + 0 + " points");
-		defenseScore.setScore(7);
+		defenseScore.setScore(9);
 
 		Score space3 = objective.getScore(ChatColor.GRAY + "   ");
-		space3.setScore(6);
+		space3.setScore(8);
 
-		Score allyScore = objective.getScore(ChatColor.GREEN + "• Alliés Attaque: +" + 0);
-		allyScore.setScore(5);
+		Score allyScore = objective.getScore(ChatColor.GREEN + "• Attack allies: +" + 0);
+		allyScore.setScore(7);
 
-		Score eAllyScore = objective.getScore(ChatColor.RED + "• Alliés Défense: +" + 0);
-		eAllyScore.setScore(4);
+		Score eAllyScore = objective.getScore(ChatColor.RED + "• Defense allies: +" + 0);
+		eAllyScore.setScore(6);
 
 		String startTime = assault.formattedStartTime;
 
 		Score space4 = objective.getScore(ChatColor.GRAY + "    ");
-		space4.setScore(1);
-
-		Score startTimeScore = objective.getScore(ChatColor.YELLOW + "• Lancé à: " + startTime);
+		space4.setScore(5);
+	
+		if(AssaultPlugin.getInstance().getConfig().getBoolean("capturable-zone.enable-zones")) {
+			CapturableZone zone = assault.zone;
+			if(zone != null) {
+				Location zoneLoc = zone.getLoc();
+				Score scoreZone = objective.getScore(ChatColor.BLUE + "• Zone loc.: " + zoneLoc.getBlockX() + "/" + zoneLoc.getBlockZ());
+				scoreZone.setScore(4);
+				Score space5 = objective.getScore(ChatColor.GRAY + "    ");
+				space5.setScore(3);
+			}
+		}
+		
+		Score startTimeScore = objective.getScore(ChatColor.YELLOW + "• Start at : " + startTime);
 		startTimeScore.setScore(0);
 
 		if(playerOnly) {
