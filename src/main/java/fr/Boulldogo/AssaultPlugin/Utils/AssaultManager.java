@@ -652,6 +652,7 @@ public class AssaultManager {
 	
 	public static Location getRandomLocationForFaction(Faction fac) {
 		List<Location> location = new ArrayList<>();
+		List<String> blacklistBlocks = AssaultPlugin.getInstance().getConfig().getStringList("capturable-zone.blacklist-materials-zone-spawn");
 		World world = Bukkit.getWorld(AssaultPlugin.getInstance().getConfig().getString("capturable-zone.zone-world"));
 		Random rd = new Random();
 		boolean resolved = false;
@@ -678,7 +679,7 @@ public class AssaultManager {
 			int x = rdLoc.getBlockX();
 			int z = rdLoc.getBlockZ();
 			for(int i = 256; i > 0; i--) {
-				if(!world.getBlockAt(x, i, z).isEmpty()) {
+				if(!world.getBlockAt(x, i, z).isEmpty() && !blacklistBlocks.contains(world.getBlockAt(x, i, z).getType().toString())) {
 					finalLoc = new Location(world, x, i + 1, z);
 					resolved = true;
 					break;

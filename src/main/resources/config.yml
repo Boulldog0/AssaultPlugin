@@ -68,6 +68,9 @@ capturable-zone:
    required-minimal-ratio-for-give-points: 1.20
    zone-world: world
    create-random-waypoints: true
+   blacklist-materials-zone-spawn:
+         - SAND
+         - BAMBOO
 
 #=================Assaults Settings=======================#
 
