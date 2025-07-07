@@ -46,6 +46,8 @@ public class Assault {
 		this.belligerentDefenseFaction = defenseFac;
 		this.attackJoins = new ArrayList<>();
 		this.defenseJoins = new ArrayList<>();
+		this.waitingAttackJoins = new ArrayList<>();
+		this.waitingDefenseJoins = new ArrayList<>();
 		this.realStartTime = Timestamp.from(Instant.now());
 		this.formattedStartTime = (realStartTime.getHours() < 10 ? ("0" + realStartTime.getHours()) : realStartTime.getHours()) + ":" + (realStartTime.getMinutes() < 10 ? ("0" + realStartTime.getMinutes()) : realStartTime.getMinutes());	
 		this.attackTaggedPlayers = new HashMap<>();

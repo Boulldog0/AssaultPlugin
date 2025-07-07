@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -117,6 +118,17 @@ public class PlayerListener implements Listener {
 			if(assault.zone.isPlayerInside(player)) {
 				assault.zone.removePlayer(player);
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent e) {
+		Player player = e.getPlayer();
+		Faction playerFac = FPlayers.getInstance().getByPlayer(player).getFaction();
+		if(AssaultManager.isFactionInAssaultOrJoinAssault(playerFac)) {
+	        if(plugin.getConfig().getBoolean("enable_assault_scoreboard")) {
+				AssaultManager.createScoreboard(AssaultManager.getFactionAssault(playerFac), player, true);
+	        }
 		}
 	}
 	

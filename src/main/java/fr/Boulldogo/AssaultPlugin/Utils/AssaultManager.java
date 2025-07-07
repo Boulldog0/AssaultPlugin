@@ -458,6 +458,7 @@ public class AssaultManager {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private static void updatePlayerScoreboards(Assault assault) {
 		Faction attackFac = assault.belligerentAttackFaction;
 		Faction defenseFac = assault.belligerentDefenseFaction;
@@ -491,7 +492,7 @@ public class AssaultManager {
 
 		for(Player player : assault.getAllPlayers()) {
 			Scoreboard board = player.getScoreboard();
-			if(board == null) {
+			if(board == null || !board.getPlayers().contains(player)) {
 				createScoreboard(assault, player, true);
 				continue;
 			}
