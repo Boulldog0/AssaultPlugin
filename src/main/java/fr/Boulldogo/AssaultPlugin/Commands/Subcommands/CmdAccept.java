@@ -39,7 +39,7 @@ public class CmdAccept extends AssaultSubcommand {
             return;
         }
         
-        Assault assault = AssaultManager.getFactionAssault(faction);
+        Assault assault = AssaultManager.getFactionAssault(playerFac);
 
         if(playerFac.isWilderness()) {
             player.sendMessage(prefix + translateString(plugin.getConfig().getString("messages.cannot_assault_in_wilderness")));
